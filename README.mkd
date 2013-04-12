@@ -1,0 +1,36 @@
+# Tmux Navigator
+
+This plugin is a repackaging of [Mislav Marohnić's][] tmux-navigator
+configuration described in [this gist][]. Please note that this plugin only
+captures the Vim specific configuration. In order to get the full
+functionality, there is a script file and a set of tmux mappings that are
+needed. Please see the previously mentioned gist for additional instructions.
+
+## Installation
+
+The main goal of this repo is to wrap Mislav's original plugin for easy
+installation using [Pathogen][], [Vundle][], or similar plugin management
+option to add it to Vim's runtime path.
+
+For **Vundle**, add the following line to your vimrc:
+
+``` vim
+Bundle 'christoomey/vim-tmux-navigator'
+```
+
+Then from within Vim run the `:BundleInstall` command and Vundle will take care
+of the rest.
+
+For **Pathogen**, run the following commands in your shell:
+
+``` bash
+cd ~/.vim
+mkdir -p bundle # creates bundle directory if it doesn't exist
+cd bundles
+git clone https://github.com/thoughtbot/vim-tmux-navigator.git
+```
+
+[this gist]: https://gist.github.com/mislav/5189704
+[Mislav Marohnić's]: http://mislav.uniqpath.com/
+[Pathogen]: https://github.com/tpope/vim-pathogen
+[Vundle]: https://github.com/gmarik/vundle
