@@ -32,4 +32,10 @@ if $TMUX != ''
   nmap <silent> <c-h> :call <SID>TmuxWinCmd('h')<cr>
   nmap <silent> <c-l> :call <SID>TmuxWinCmd('l')<cr>
   nmap <silent> <c-\> :call <SID>TmuxWinCmd('p')<cr>
+else
+  noremap <C-j> <C-w>j
+  noremap <C-k> <C-w>k
+  noremap <C-h> <C-w>h
+  noremap <C-l> <C-w>l
+  noremap <C-\> <C-w>p
 end
