@@ -6,6 +6,34 @@ captures the Vim specific configuration. In order to get the full
 functionality, there is a script file and a set of tmux mappings that are
 needed. Please see the previously mentioned gist for additional instructions.
 
+## Usage
+
+This plugin, when used in conjunction with the other scripts listed in the gist
+referenced above, will allow for seamless navigation between Vim splits and
+tmux panes. By default it provides the following mappings:
+
+- `<ctrl-h>` => Left
+- `<ctrl-j>` => Down
+- `<ctrl-k>` => Up
+- `<ctrl-l>` => Right
+
+If you don't want the plugin to create any mappings, you can use the four
+provided functions to define your own custom maps. Add the following to your
+vimrc to use custom maps:
+
+``` vim
+let g:tmux_navigator_no_mappings = 1
+
+nmap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
+nmap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
+nmap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
+nmap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
+```
+
+*Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
+in the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` =>
+Left would be created with `nmap <silent> <c-h> :TmuxNavigateLeft<cr>`.
+
 ## Installation
 
 The main goal of this repo is to wrap Mislav's original plugin for easy
