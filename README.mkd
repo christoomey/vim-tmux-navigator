@@ -1,21 +1,19 @@
 # Tmux Navigator
 
 This plugin is a repackaging of [Mislav Marohnić's][] tmux-navigator
-configuration described in [this gist][]. Please note that this plugin only
-captures the Vim specific configuration. In order to get the full
-functionality, there is a script file and a set of tmux mappings that are
-needed. Please see the previously mentioned gist for additional instructions.
+configuration described in [this gist][]. When combined with a set of tmux
+key bindings, the plugin will allow you to navigate seamlessly between
+vim and tmux splits using a consistent set of hotkeys.
 
 ## Usage
 
-This plugin, when used in conjunction with the other scripts listed in the gist
-referenced above, will allow for seamless navigation between Vim splits and
-tmux panes. By default it provides the following mappings:
+By default the script provides the following mappings:
 
 - `<ctrl-h>` => Left
 - `<ctrl-j>` => Down
 - `<ctrl-k>` => Up
 - `<ctrl-l>` => Right
+- `<ctrl-\>` => Previous split
 
 If you don't want the plugin to create any mappings, you can use the four
 provided functions to define your own custom maps. Add the following to your
@@ -28,6 +26,7 @@ nmap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
 nmap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
 nmap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
 nmap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
+nmap <silent> {Previoust-Mapping} :TmuxNavigatePrevious<cr>
 ```
 
 *Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
@@ -57,8 +56,27 @@ mkdir -p bundle # creates bundle directory if it doesn't exist
 cd bundles
 git clone https://github.com/christoomey/vim-tmux-navigator.git
 ```
+### Tmux Configuration
+
+Add the following to your `tmux.conf` file to configure the tmux side of
+this customization.
+
+``` tmux
+# Smart pane switching with awareness of vim splits
+bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-l) || tmux select-pane -R"
+bind -n C-\ run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys 'C-\\') || tmux select-pane -l"
+```
+
+Thanks to Christopher Sexton who provided the updated tmux configuration in
+[this blog post][].
+
+**NOTE**: This requires tmux v1.8 or higher.
 
 [this gist]: https://gist.github.com/mislav/5189704
 [Mislav Marohnić's]: http://mislav.uniqpath.com/
 [Pathogen]: https://github.com/tpope/vim-pathogen
 [Vundle]: https://github.com/gmarik/vundle
+[this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits

@@ -54,10 +54,12 @@ command! TmuxNavigateLeft call <SID>TmuxWinCmd('h')
 command! TmuxNavigateDown call <SID>TmuxWinCmd('j')
 command! TmuxNavigateUp call <SID>TmuxWinCmd('k')
 command! TmuxNavigateRight call <SID>TmuxWinCmd('l')
+command! TmuxNavigatePrevious call <SID>TmuxWinCmd('p')
 
 if s:UseTmuxNavigatorMappings()
   nmap <silent> <c-h> :TmuxNavigateLeft<cr>
   nmap <silent> <c-j> :TmuxNavigateDown<cr>
   nmap <silent> <c-k> :TmuxNavigateUp<cr>
   nmap <silent> <c-l> :TmuxNavigateRight<cr>
+  nmap <silent> <c-\> :TmuxNavigatePrevious<cr>
 endif
