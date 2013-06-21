@@ -53,7 +53,7 @@ For **Pathogen**, run the following commands in your shell:
 ``` bash
 cd ~/.vim
 mkdir -p bundle # creates bundle directory if it doesn't exist
-cd bundles
+cd bundle
 git clone https://github.com/christoomey/vim-tmux-navigator.git
 ```
 ### Tmux Configuration
