@@ -57,9 +57,9 @@ command! TmuxNavigateRight call <SID>TmuxWinCmd('l')
 command! TmuxNavigatePrevious call <SID>TmuxWinCmd('p')
 
 if s:UseTmuxNavigatorMappings()
-  nmap <silent> <c-h> :TmuxNavigateLeft<cr>
-  nmap <silent> <c-j> :TmuxNavigateDown<cr>
-  nmap <silent> <c-k> :TmuxNavigateUp<cr>
-  nmap <silent> <c-l> :TmuxNavigateRight<cr>
-  nmap <silent> <c-\> :TmuxNavigatePrevious<cr>
+  nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+  nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+  nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+  nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+  nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 endif

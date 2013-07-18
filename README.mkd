@@ -22,16 +22,16 @@ vimrc to use custom maps:
 ``` vim
 let g:tmux_navigator_no_mappings = 1
 
-nmap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
-nmap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
-nmap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
-nmap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
-nmap <silent> {Previoust-Mapping} :TmuxNavigatePrevious<cr>
+nnoremap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
+nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
+nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
+nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
+nnoremap <silent> {Previoust-Mapping} :TmuxNavigatePrevious<cr>
 ```
 
 *Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
 in the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` =>
-Left would be created with `nmap <silent> <c-h> :TmuxNavigateLeft<cr>`.
+Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
 
 ## Installation
 
