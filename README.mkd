@@ -75,8 +75,26 @@ Thanks to Christopher Sexton who provided the updated tmux configuration in
 
 **NOTE**: This requires tmux v1.8 or higher.
 
+### Restoring Clear Screen Key Binding
+
+The default key bindings include `<Ctrl-l>` which is the common key binding for
+clearing the screen in interactive shells. If you want to still be able to
+clear the screen, there are two main options:
+
+1. Add an alternate key binding to your `.tmux.conf` to send the <Ctrl-l>
+   sequence. For instance, to bind `<prefix>-l` to clear screen, add `bind C-l
+send-keys 'C-l'` to your `.tmux.conf`. Assuming the default setting of
+`<prefix>` = `<Ctrl-b>`, this would mean that pressing `<Ctrl-b>` then `l`
+would act the same as `<Ctrl-l>` did before using this plugin.
+2. Use a different set of mappings for the navigator functionality, as described
+above, to avoid conflicting with the default `<Ctrl-l>` behavior.
+
+Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
+
+
 [this gist]: https://gist.github.com/mislav/5189704
 [Mislav Marohnić's]: http://mislav.uniqpath.com/
 [Pathogen]: https://github.com/tpope/vim-pathogen
 [Vundle]: https://github.com/gmarik/vundle
 [this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
+[Brian Hogan]: https://twitter.com/bphogan
