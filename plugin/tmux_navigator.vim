@@ -31,8 +31,7 @@ function! s:TmuxAwareNavigate(direction)
   let nr = winnr()
   let tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
   if !tmux_last_pane
-    " try to switch windows within vim
-    exec 'wincmd ' . a:direction
+    call s:VimNavigate(a:direction)
   endif
   " Forward the switch panes command to tmux if:
   " a) we're toggling between the last tmux pane;
@@ -47,7 +46,11 @@ function! s:TmuxAwareNavigate(direction)
 endfunction
 
 function! s:VimNavigate(direction)
-  execute 'wincmd ' . a:direction
+  try
+    execute 'wincmd ' . a:direction
+  catch
+    echohl ErrorMsg | echo 'E11: Invalid in command-line window; <CR> executes, CTRL-C quits: wincmd k' | echohl None
+  endtry
 endfunction
 
 command! TmuxNavigateLeft call <SID>TmuxWinCmd('h')
