@@ -48,11 +48,11 @@ this customization.
 
 ``` tmux
 # Smart pane switching with awareness of vim splits
-bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim$' && tmux send-keys C-h) || tmux select-pane -L"
-bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim$' && tmux send-keys C-j) || tmux select-pane -D"
-bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim$' && tmux send-keys C-k) || tmux select-pane -U"
-bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim$' && tmux send-keys C-l) || tmux select-pane -R"
-bind -n C-\ run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim$' && tmux send-keys 'C-\\') || tmux select-pane -l"
+bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-l) || tmux select-pane -R"
+bind -n C-\ run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys 'C-\\') || tmux select-pane -l"
 ```
 
 Thanks to Christopher Sexton who provided the updated tmux configuration in
@@ -111,8 +111,18 @@ Troubleshooting
 ### Vim -> Tmux doesn't work!
 
 This is likely due to conflicting key mappings in your `~/.vimrc`. You can use
-the following search pattern to find conflicting mappings `\vn(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or altered to avoid conflicting
-with the mappings from the plugin.
+the following search pattern to find conflicting mappings
+`\vn(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or
+altered to avoid conflicting with the mappings from the plugin.
+
+Another option is that the pattern matching included in the `.tmux.conf` is
+not recognizing that Vim is active. To check that tmux is properly recognizing
+Vim, use the provided Vim command `:TmuxPaneCurrentCommand`. The output of
+that command shoule be a string like 'vim', 'Vim', 'vimdiff', etc. If you
+encounter a different output please [open an issue][] with as much info about
+your OS, Vim version, and tmux version as possible.
+
+[open an issue]: https://github.com/christoomey/vim-tmux-navigator/issues/new
 
 ### Tmux Can't Tell if Vim Is Active
 

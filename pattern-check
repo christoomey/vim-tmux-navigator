@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# Collection of various test strings that could be the output of the tmux
+# 'pane_current_comamnd' message. Included as regression test for updates to
+# the inline grep pattern used in the `.tmux.conf` configuration
+
+set -e
+
+vim_pattern='(^|/)vim(diff)?$'
+match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim)
+no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
+
+echo "Testing against pattern: $vim_pattern"
+
+# Matches
+echo "These should all match"
+echo "----------------------"
+
+for string in ${match_tests[@]}
+do
+  echo $string | grep -i -E $vim_pattern
+done
+
+# No Match
+echo "\nThese should not match"
+echo "----------------------"
+
+for string in ${no_match_tests[@]}
+do
+  echo "$string $(echo $string | grep -i -E $vim_pattern)"
+done

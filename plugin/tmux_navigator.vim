@@ -15,6 +15,11 @@ function! s:InTmuxSession()
   return $TMUX != ''
 endfunction
 
+function! s:TmuxPaneCurrentCommand()
+  echo system("tmux display-message -p '#{pane_current_command}'")
+endfunction
+command! TmuxPaneCurrentCommand call <SID>TmuxPaneCurrentCommand()
+
 let s:tmux_is_last_pane = 0
 au WinEnter * let s:tmux_is_last_pane = 0
 
