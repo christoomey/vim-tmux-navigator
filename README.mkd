@@ -88,7 +88,7 @@ Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
 
 #### Tmux
 
-Alter each of the five lines of the tmux configruation listed above to use your
+Alter each of the five lines of the tmux configuration listed above to use your
 custom mappings. **Note** each line contains two references to the desired
 mapping.
 
