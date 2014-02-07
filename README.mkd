@@ -79,7 +79,7 @@ nnoremap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
 nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
 nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
 nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
-nnoremap <silent> {Previoust-Mapping} :TmuxNavigatePrevious<cr>
+nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 ```
 
 *Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
@@ -118,7 +118,7 @@ altered to avoid conflicting with the mappings from the plugin.
 Another option is that the pattern matching included in the `.tmux.conf` is
 not recognizing that Vim is active. To check that tmux is properly recognizing
 Vim, use the provided Vim command `:TmuxPaneCurrentCommand`. The output of
-that command shoule be a string like 'vim', 'Vim', 'vimdiff', etc. If you
+that command should be a string like 'vim', 'Vim', 'vimdiff', etc. If you
 encounter a different output please [open an issue][] with as much info about
 your OS, Vim version, and tmux version as possible.
 
