@@ -44,7 +44,7 @@ function! s:TmuxAwareNavigate(direction)
   if tmux_last_pane || nr == winnr()
     let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call system(cmd)
-    if exists('loaded_vitality')
+    if exists('g:loaded_vitality')
       redraw!
     endif
     let s:tmux_is_last_pane = 1
