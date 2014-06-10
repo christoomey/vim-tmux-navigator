@@ -6,8 +6,8 @@
 
 set -e
 
-vim_pattern='(^|/)vim(diff)?$'
-match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim)
+vim_pattern='(^|\/)g?(view|vim?)(diff)?$'
+match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim vi gvim view gview)
 no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
 
 echo "Testing against pattern: $vim_pattern"
