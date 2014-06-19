@@ -108,3 +108,13 @@ if s:UseTmuxNavigatorMappings()
   nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 endif
+
+" Init: set an environment variable in the tmux session to indicate that this
+" pane is meant to receive keys.
+if len($TMUX_PANE)
+  call system("tmux set-env 'tmux_navigator_bypass_".$TMUX_PANE."' 1")
+  augroup tmux_navigator_leave
+    au!
+    au VimLeave * call system("tmux set-env -u 'tmux_navigator_bypass_".$TMUX_PANE."'")
+  augroup END
+endif
