@@ -92,7 +92,9 @@ Alter each of the five lines of the tmux configuration listed above to use your
 custom mappings. **Note** each line contains two references to the desired
 mapping.
 
-### Restoring Clear Screen (C-l)
+### Additional Customization
+
+#### Restoring Clear Screen (C-l)
 
 The default key bindings include `<Ctrl-l>` which is the readline key binding
 for clearing the screen. The following binding can be added to your `~/.tmux.conf` file to provide an alternate mapping to `clear-screen`.
@@ -104,6 +106,36 @@ bind C-l send-keys 'C-l'
 With this enabled you can use `<prefix> C-l` to clear the screen.
 
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
+
+#### Nesting
+If you like to nest your tmux sessions, this plugin is not going to work
+properly. It probably never will, as it would require detecting when Tmux would
+wrap from one outermost pane to another and propagating that to the outer
+session.
+
+By default this plugin works on the outermost tmux session and the vim
+sessions it contains, but you can customize the behaviour by adding more
+commands to the expression used by the grep command.
+
+When nesting tmux sessions via ssh or mosh, you could extend it to look like
+`'(^|\/)g?(view|vim|ssh|mosh?)(diff)?$'`, which makes this plugin work within
+the innermost tmux session and the vim sessions within that one. This works
+better than the default behaviour if you use the outer Tmux sessions as relays
+to different hosts and have all instances of vim on remote hosts.
+
+Similarly, if you like to nest tmux locally, add `|tmux` to the expression.
+
+This behaviour means that you can't leave the innermost session with Ctrl-hjkl
+directly. These following fallback mappings can be targeted to the right Tmux
+session by escaping the prefix (Tmux' `send-prefix` command).
+
+``` tmux
+bind -r C-h run "tmux select-pane -L"
+bind -r C-j run "tmux select-pane -D"
+bind -r C-k run "tmux select-pane -U"
+bind -r C-l run "tmux select-pane -R"
+bind -r C-\ run "tmux select-pane -l"
+```
 
 Troubleshooting
 ---------------
