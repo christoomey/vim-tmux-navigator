@@ -47,6 +47,12 @@ function! s:TmuxPaneCurrentCommand()
 endfunction
 command! TmuxPaneCurrentCommand call <SID>TmuxPaneCurrentCommand()
 
+function! s:TmuxPaneShowEnvVar()
+  echom "TMUX_PANE:" $TMUX_PANE
+  echo s:TmuxCommand("show-env tmux_navigator_bypass_".$TMUX_PANE)
+endfunction
+command! TmuxPaneShowEnvVar call <SID>TmuxPaneShowEnvVar()
+
 let s:tmux_is_last_pane = 0
 au WinEnter * let s:tmux_is_last_pane = 0
 
