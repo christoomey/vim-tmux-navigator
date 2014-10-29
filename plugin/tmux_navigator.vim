@@ -32,6 +32,10 @@ function! s:TmuxWinCmd(direction)
   endif
 endfunction
 
+function! s:NeedsVitalityRedraw()
+  return exists('g:loaded_vitality') && v:version < 704 && !has("patch481")
+endfunction
+
 function! s:TmuxAwareNavigate(direction)
   let nr = winnr()
   let tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
@@ -44,7 +48,7 @@ function! s:TmuxAwareNavigate(direction)
   if tmux_last_pane || nr == winnr()
     let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call system(cmd)
-    if exists('g:loaded_vitality')
+    if s:NeedsVitalityRedraw()
       redraw!
     endif
     let s:tmux_is_last_pane = 1
