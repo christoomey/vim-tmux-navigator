@@ -33,7 +33,7 @@ function! s:TmuxWinCmd(direction)
 endfunction
 
 function! s:NeedsVitalityRedraw()
-  return exists('g:loaded_vitality') && v:version > 703 && has("patch481")
+  return exists('g:loaded_vitality') && v:version < 704 && !has("patch481")
 endfunction
 
 function! s:TmuxAwareNavigate(direction)
