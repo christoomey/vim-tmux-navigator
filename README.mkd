@@ -169,7 +169,7 @@ tmux -V # should return 'tmux 1.8'
 
 [tmate][] is a tmux fork that aids in setting up remote pair programming
 sessions. It is designed to run alongside tmux without issue, but occasionally
-their are hiccups. Specifically, if the versions of tmux and tmate don't match,
+there are hiccups. Specifically, if the versions of tmux and tmate don't match,
 you can have issues. See [this
 issue](https://github.com/christoomey/vim-tmux-navigator/issues/27) for more
 detail.
