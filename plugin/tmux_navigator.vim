@@ -8,7 +8,7 @@ endif
 let g:loaded_tmux_navigator = 1
 
 if (!exists("g:tmux_navigator_save_on_switch"))
-   let g:tmux_navigator_save_on_switch = 0
+  let g:tmux_navigator_save_on_switch = 0
 endif
 
 function! s:UseTmuxNavigatorMappings()
@@ -47,7 +47,7 @@ function! s:TmuxAwareNavigate(direction)
   " b) we tried switching windows in vim but it didn't have effect.
   if tmux_last_pane || nr == winnr()
     if g:tmux_navigator_save_on_switch
-        update
+      update
     endif
     let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call system(cmd)
