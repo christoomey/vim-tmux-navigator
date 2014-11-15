@@ -6,26 +6,37 @@
 
 set -e
 
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+NORMAL=$(tput sgr0)
+
 vim_pattern='(^|\/)g?(view|n?vim?)(diff)?$'
 match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim vi gvim view gview nvim)
 no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
 
-echo "Testing against pattern: $vim_pattern"
+display_matches() {
+  for process_name in "$@"; do
+    printf "%s %s\n" "$(matches_vim_pattern $process_name)" "$process_name"
+  done
+}
 
-# Matches
-echo "These should all match"
-echo "----------------------"
+matches_vim_pattern() {
+  if echo "$1" | grep -iqE "$vim_pattern"; then
+    echo "${GREEN}match${NORMAL}"
+  else
+    echo "${RED}fail${NORMAL}"
+  fi
+}
 
-for string in ${match_tests[@]}
-do
-  echo $string | grep -i -E $vim_pattern
-done
+main() {
+  echo "Testing against pattern: ${YELLOW}$vim_pattern${NORMAL}\n"
 
-# No Match
-echo "\nThese should not match"
-echo "----------------------"
+  echo "These should all ${GREEN}match${NORMAL}\n----------------------"
+  display_matches "${match_tests[@]}"
 
-for string in ${no_match_tests[@]}
-do
-  echo "$string $(echo $string | grep -i -E $vim_pattern)"
-done
+  echo "\nThese should all ${RED}fail${NORMAL}\n---------------------"
+  display_matches "${no_match_tests[@]}"
+}
+
+main
