@@ -46,6 +46,9 @@ function! s:TmuxAwareNavigate(direction)
   " a) we're toggling between the last tmux pane;
   " b) we tried switching windows in vim but it didn't have effect.
   if tmux_last_pane || nr == winnr()
+    if exists('g:tmux_navigator_save_on_switch')
+        update
+    endif
     let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call system(cmd)
     if s:NeedsVitalityRedraw()
