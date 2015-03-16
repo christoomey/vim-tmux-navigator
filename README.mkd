@@ -38,7 +38,13 @@ install the plugin:
 Add the following line to your `~/.vimrc` file
 
 ``` vim
-Bundle 'christoomey/vim-tmux-navigator'
+Plugin 'christoomey/vim-tmux-navigator'
+```
+
+Then run
+
+```
+:PluginInstall
 ```
 
 ### Tmux
