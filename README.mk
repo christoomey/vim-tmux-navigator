@@ -180,6 +180,14 @@ version to confirm with this shell command:
 tmux -V # should return 'tmux 1.8'
 ```
 
+### Switching out of Vim Is Slow
+
+If you find that navigation within Vim (from split to split) is fine, but Vim
+to a non-Vim tmux pane is delayed, it might be due to a slow shell startup.
+Consider moving code from your shell's non-interactive rc file (e.g.,
+`~/.zshenv`) into the interactive startup file (e.g., `~/.zshrc`) as Vim only
+sources the non-interactive config.
+
 ### It Doesn't Work in tmate
 
 [tmate][] is a tmux fork that aids in setting up remote pair programming
