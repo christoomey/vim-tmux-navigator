@@ -55,6 +55,7 @@ function! s:TmuxAwareNavigate(direction)
     endif
     let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call system(cmd)
+    silent doautocmd FocusLost %
     if s:NeedsVitalityRedraw()
       redraw!
     endif
