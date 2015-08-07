@@ -11,6 +11,10 @@ if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
 endif
 
+if !exists("g:tmux_navigator_command")
+  let g:tmux_navigator_command = "tmux"
+endif
+
 function! s:UseTmuxNavigatorMappings()
   return !exists("g:tmux_navigator_no_mappings") || !g:tmux_navigator_no_mappings
 endfunction
@@ -20,7 +24,7 @@ function! s:InTmuxSession()
 endfunction
 
 function! s:TmuxPaneCurrentCommand()
-  echo system("tmux display-message -p '#{pane_current_command}'")
+  echo system(g:tmux_navigator_command . " display-message -p '#{pane_current_command}'")
 endfunction
 command! TmuxPaneCurrentCommand call <SID>TmuxPaneCurrentCommand()
 
@@ -53,7 +57,7 @@ function! s:TmuxAwareNavigate(direction)
     if g:tmux_navigator_save_on_switch
       update
     endif
-    let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
+    let cmd = g:tmux_navigator_command . ' select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call system(cmd)
     if s:NeedsVitalityRedraw()
       redraw!
