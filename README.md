@@ -188,14 +188,32 @@ Consider moving code from your shell's non-interactive rc file (e.g.,
 `~/.zshenv`) into the interactive startup file (e.g., `~/.zshrc`) as Vim only
 sources the non-interactive config.
 
-### It Doesn't Work in tmate
+### It Doesn't Work in [tmate][]
 
-[tmate][] is a tmux fork that aids in setting up remote pair programming
-sessions. It is designed to run alongside tmux without issue, but occasionally
-there are hiccups. Specifically, if the versions of tmux and tmate don't match,
-you can have issues. See [this
-issue](https://github.com/christoomey/vim-tmux-navigator/issues/27) for more
-detail.
+Add the following line to your `~/.vimrc` file:
+
+``` vim
+let g:tmux_navigator_command = 'tmate'
+```
+
+If you want to get fancier and make everything work in both tmux and tmate, add
+the following to your `~/.tmux.conf`:
+
+``` tmux
+set-environment -g TMUX_COMMAND tmux
+```
+
+and this to your `~/.tmate.conf`:
+
+``` tmux
+set-environment -g TMUX_COMMAND tmate
+```
+
+and this to your `~/.vimrc`:
+
+``` vim
+let g:tmux_navigator_command = $TMUX_COMMAND
+```
 
 [tmate]: http://tmate.io/
 
