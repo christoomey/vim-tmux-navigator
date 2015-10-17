@@ -19,8 +19,18 @@ function! s:InTmuxSession()
   return $TMUX != ''
 endfunction
 
+function! s:TmuxSocket()
+  " The socket path is the first value in the comma-separated list of $TMUX.
+  return split($TMUX, ',')[0]
+endfunction
+
+function! s:TmuxCommand(args)
+  let cmd = 'tmux -S ' . s:TmuxSocket() . ' ' . a:args
+  return system(cmd)
+endfunction
+
 function! s:TmuxPaneCurrentCommand()
-  echo system("tmux display-message -p '#{pane_current_command}'")
+  echo s:TmuxCommand("display-message -p '#{pane_current_command}'")
 endfunction
 command! TmuxPaneCurrentCommand call <SID>TmuxPaneCurrentCommand()
 
@@ -53,8 +63,8 @@ function! s:TmuxAwareNavigate(direction)
     if g:tmux_navigator_save_on_switch
       update
     endif
-    let cmd = 'tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
-    silent call system(cmd)
+    let args = 'select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
+    silent call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
       redraw!
     endif
