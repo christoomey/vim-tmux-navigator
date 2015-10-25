@@ -11,6 +11,19 @@ if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
 endif
 
+function! s:TmuxOrTmateExecutable()
+  if s:StrippedSystemCall("[[ $TMUX =~ tmate ]] && echo 'tmate'") == 'tmate'
+    return "tmate"
+  else
+    return "tmux"
+  endif
+endfunction
+
+function! s:StrippedSystemCall(system_cmd)
+  let raw_result = system(a:system_cmd)
+  return substitute(raw_result, '^\s*\(.\{-}\)\s*\n\?$', '\1', '')
+endfunction
+
 function! s:UseTmuxNavigatorMappings()
   return !exists("g:tmux_navigator_no_mappings") || !g:tmux_navigator_no_mappings
 endfunction
@@ -25,7 +38,7 @@ function! s:TmuxSocket()
 endfunction
 
 function! s:TmuxCommand(args)
-  let cmd = 'tmux -S ' . s:TmuxSocket() . ' ' . a:args
+  let cmd = s:TmuxOrTmateExecutable() . ' -S ' . s:TmuxSocket() . ' ' . a:args
   return system(cmd)
 endfunction
 
