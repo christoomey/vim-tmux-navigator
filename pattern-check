@@ -11,8 +11,8 @@ GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 NORMAL=$(tput sgr0)
 
-vim_pattern='(^|\/)g?(view|n?vim?)(diff)?$'
-match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim vi gvim view gview nvim)
+vim_pattern='(^|\/)g?(view|n?vim?x?)(diff)?$'
+match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim vi gvim view gview nvim vimx)
 no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
 
 display_matches() {
