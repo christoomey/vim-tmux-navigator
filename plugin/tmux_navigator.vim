@@ -12,7 +12,7 @@ if !exists("g:tmux_navigator_save_on_switch")
 endif
 
 function! s:TmuxOrTmateExecutable()
-  if s:StrippedSystemCall("[[ $TMUX =~ tmate ]] && echo 'tmate'") == 'tmate'
+  if s:StrippedSystemCall("[[ $TMUX == *'tmate'* ]] && echo 'tmate'") == 'tmate'
     return "tmate"
   else
     return "tmux"
