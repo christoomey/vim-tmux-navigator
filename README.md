@@ -1,10 +1,10 @@
 Vim Tmux Navigator
 ==================
 
-This plugin is a repackaging of [Mislav Marohnić's][] tmux-navigator
-configuration described in [this gist][]. When combined with a set of tmux
-key bindings, the plugin will allow you to navigate seamlessly between
-vim and tmux splits using a consistent set of hotkeys.
+This plugin is based on [Mislav Marohnić's][] tmux-navigator configuration
+described in [this gist][]. When combined with a set of tmux key bindings, the
+plugin will allow you to navigate seamlessly between Vim and tmux splits using
+a consistent set of hotkeys.
 
 **NOTE**: This requires tmux v1.8 or higher.
 
@@ -55,16 +55,14 @@ this customization.
 ``` tmux
 # Smart pane switching with awareness of vim splits
 # See: https://github.com/christoomey/vim-tmux-navigator
-is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?x?)(diff)?$"'
+is_vim='tmux show-env tmux_navigator_bypass_#{pane_id} >/dev/null 2>&1 \
+  || echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?x?)(diff)?$"'
 bind -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
 bind -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
 bind -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
 bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
 bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 ```
-
-Thanks to Christopher Sexton who provided the updated tmux configuration in
-[this blog post][].
 
 Configuration
 -------------
@@ -163,14 +161,16 @@ the following search pattern to find conflicting mappings
 `\vn(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or
 altered to avoid conflicting with the mappings from the plugin.
 
-Another option is that the pattern matching included in the `.tmux.conf` is
-not recognizing that Vim is active. To check that tmux is properly recognizing
-Vim, use the provided Vim command `:TmuxPaneCurrentCommand`. The output of
-that command should be a string like 'vim', 'Vim', 'vimdiff', etc. If you
-encounter a different output please [open an issue][] with as much info about
-your OS, Vim version, and tmux version as possible.
+The Vim plugin provides a command to output the tmux environment variable which
+is used for communication between Vim and tmux: `:TmuxPaneShowEnvVar`.
 
-[open an issue]: https://github.com/christoomey/vim-tmux-navigator/issues/new
+Its output should look similar to this:
+
+    TMUX_PANE: %1
+    tmux_navigator_bypass_%1=1
+
+If you encounter a different output please [open an issue][] with as much info
+about your OS, Vim version, and tmux version as possible.
 
 ### Tmux Can't Tell if Vim Is Active
 
@@ -202,15 +202,27 @@ detail.
 
 ### It Still Doesn't Work!!!
 
-The tmux configuration uses an inlined grep pattern match to help determine if
-the current pane is running Vim. If you run into any issues with the navigation
-not happening as expected, you can try using [Mislav's original external
-script][] which has a more robust check.
+You can try using [Mislav's original external script][], but please consider
+[opening an issue][open an issue] to get it fixed in this plugin, which is
+meant to use a more robust method.
+
+How does it work?
+-----------------
+This plugin uses a tmux environment variable for communication between tmux and
+Vim. This environment variable (`tmux_navigator_bypass_#{pane_id}`) contains
+the tmux pane identifier (available as `$TMUX_PANE` in the shell environment).
+
+`show-env` is used in the tmux keybindings to see if Vim has indicated that it
+is running inside the current pane.
+
+The Vim plugin uses `tmux set-env` to set the environment variable during
+startup and unsets it when exiting.
+
 
 [Brian Hogan]: https://twitter.com/bphogan
 [Mislav Marohnić's]: http://mislav.uniqpath.com/
 [Mislav's original external script]: https://github.com/mislav/dotfiles/blob/master/bin/tmux-vim-select-pane
 [Vundle]: https://github.com/gmarik/vundle
 [configuration section below]: #custom-key-bindings
-[this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
 [this gist]: https://gist.github.com/mislav/5189704
+[open an issue]: https://github.com/christoomey/vim-tmux-navigator/issues/new
