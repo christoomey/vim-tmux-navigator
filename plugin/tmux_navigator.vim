@@ -42,6 +42,10 @@ function! s:TmuxCommand(args)
   return system(cmd)
 endfunction
 
+function! s:TmuxPaneIsZoomed()
+  return s:TmuxCommand("display-message -p '#{window_zoomed_flag}'") == 1
+endfunction
+
 function! s:TmuxPaneCurrentCommand()
   echo s:TmuxCommand("display-message -p '#{pane_current_command}'")
 endfunction
@@ -72,7 +76,7 @@ function! s:TmuxAwareNavigate(direction)
   " Forward the switch panes command to tmux if:
   " a) we're toggling between the last tmux pane;
   " b) we tried switching windows in vim but it didn't have effect.
-  if tmux_last_pane || nr == winnr()
+  if (tmux_last_pane || nr == winnr()) && (! s:TmuxPaneIsZoomed())
     if g:tmux_navigator_save_on_switch
       update
     endif
