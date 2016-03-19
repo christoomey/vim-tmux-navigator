@@ -69,6 +69,30 @@ Thanks to Christopher Sexton who provided the updated tmux configuration in
 Configuration
 -------------
 
+### Add sane pane resizing to vim and tmux
+
+Allows for using Meta/Alt + [h,j,k,l] to resize tmux panes and vim splits.
+
+Add the following to your `~/.vimrc`:
+```
+" sane pane resizing
+nnoremap <silent> <M-k> <C-W>-
+nnoremap <silent> <M-j> <C-W>+
+nnoremap <silent> <M-l> <C-W>>
+nnoremap <silent> <M-h> <C-W><
+" optional auto equalize vim splits
+autocmd VimResized * wincmd =
+```
+
+Add the following to your `tmux.conf`:
+```
+# sane pane resizeing with awareness of vim splits
+bind -n M-j if-shell "$is_vim" "send-keys M-j" "resize-pane -D 10"
+bind -n M-k if-shell "$is_vim" "send-keys M-k" "resize-pane -U 10"
+bind -n M-l if-shell "$is_vim" "send-keys M-l" "resize-pane -R 10"
+bind -n M-h if-shell "$is_vim" "send-keys M-h" "resize-pane -L 10"
+```
+
 ### Custom Key Bindings
 
 If you don't want the plugin to create any mappings, you can use the five
@@ -206,6 +230,24 @@ The tmux configuration uses an inlined grep pattern match to help determine if
 the current pane is running Vim. If you run into any issues with the navigation
 not happening as expected, you can try using [Mislav's original external
 script][] which has a more robust check.
+
+### Pane and or split resize bindings aren't working
+
+If your are on OSX make sure you have `use option as meta key` checked in 
+Terminal > Preferences > keyboard.
+
+Add the folowing to your `~/.vimrc`:
+
+```
+" Meta key support for Alt/Option button
+let c='a'
+while c <= 'z'
+  exec "set <M-".tolower(c).">=\e".c
+  exec "imap \e".c." <M-".tolower(c).">"
+  let c = nr2char(1+char2nr(c))
+endw
+```
+
 
 [Brian Hogan]: https://twitter.com/bphogan
 [Mislav Marohnić's]: http://mislav.uniqpath.com/
