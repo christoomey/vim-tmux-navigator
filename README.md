@@ -94,13 +94,11 @@ nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 in the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` =>
 Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
 
-
 ##### Autosave on leave
 
     let g:tmux_navigator_save_on_switch = 1
 
 This will execute the update command on leaving vim to a tmux pane. Default is Zero
-
 
 #### Tmux
 
@@ -199,6 +197,32 @@ issue](https://github.com/christoomey/vim-tmux-navigator/issues/27) for more
 detail.
 
 [tmate]: http://tmate.io/
+
+### It Doesn't Work in Neovim (specifically C-h)
+
+[Neovim][] is a Vim fork. While Neovim is intended to be a drop-in replacement
+for Vim, it does handle some keyboard input differently than Vim does. Some
+users (including those on OS X) may find that all of their pane-switching
+keybindings work with the exception of <kbd>Ctrl</kbd>+<kbd>h</kbd>, which
+instead returns a backspace. The explanation of what is going on vastly exceeds
+the scope of this guide, but you can read the discussion on this Neovim
+[issue][].
+
+The simplest and hackiest solution is to add the following to your Neovim
+`init.vim`, capturing the <kbd>Backspace</kbd> that Neovim receives when
+<kbd>Ctrl</kbd>+<kbd>h</kbd> is typed in normal mode:
+
+```vimL
+nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
+```
+
+A more complete and less-hacky solution would be to update the incorrect
+terminfo entry that is part of the problem on OS X (and some Linux
+distributions) as described in this [comment][].
+
+[Neovim]: https://neovim.io/
+[issue]: https://github.com/neovim/neovim/issues/2048
+[comment]: https://github.com/neovim/neovim/issues/2048#issuecomment-78045837
 
 ### It Still Doesn't Work!!!
 
