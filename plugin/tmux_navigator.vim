@@ -25,7 +25,7 @@ function! s:StrippedSystemCall(system_cmd)
 endfunction
 
 function! s:UseTmuxNavigatorMappings()
-  return get(g:, "tmux_navigator_no_mappings", 1)
+  return !get(g:, 'tmux_navigator_no_mappings', 0)
 endfunction
 
 function! s:InTmuxSession()
