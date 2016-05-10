@@ -121,6 +121,17 @@ With this enabled you can use `<prefix> C-l` to clear the screen.
 
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
+#### Intellectual Clear Screen
+
+Additionally, it is possible to make `<Ctrl-l>` to work as usual if there is only one pane (this will also work well if that pane is Vim):
+
+``` tmux
+single_pane='tmux list-panes | awk "{if (\$1!=\"0:\") {exit 1}}"'
+...
+bind -n C-l if-shell "$single_pane || $is_vim" "send-keys C-l" "select-pane -R"
+```
+(TODO: also handle situation when active pane doesn't participate in vertical split)
+
 #### Nesting
 If you like to nest your tmux sessions, this plugin is not going to work
 properly. It probably never will, as it would require detecting when Tmux would
