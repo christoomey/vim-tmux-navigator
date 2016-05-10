@@ -123,14 +123,13 @@ Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
 #### Intellectual Clear Screen
 
-Additionally, it is possible to make `<Ctrl-l>` to work as usual if there is only one pane (this will also work well if that pane is Vim):
+Additionally, it is possible to make `<Ctrl-l>` to work as usual if current pane is full-width (this will also work well if that pane is Vim):
 
 ``` tmux
-single_pane='tmux list-panes | awk "{if (\$1!=\"0:\") {exit 1}}"'
+single_pane='test $(tmux list-panes | grep "(active)" | grep -o "\[[0-9]*x" | tr -d "[x") -eq $(tmux list-windows | grep "(active)" | grep -o " \[[0-9]*x" | tr -d "[x")'
 ...
 bind -n C-l if-shell "$single_pane || $is_vim" "send-keys C-l" "select-pane -R"
 ```
-(TODO: also handle situation when active pane doesn't participate in vertical split)
 
 #### Nesting
 If you like to nest your tmux sessions, this plugin is not going to work
