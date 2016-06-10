@@ -64,6 +64,14 @@ bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
 bind-key -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 ```
 
+Or optionally, when using the [TPM][] add the following lines to
+`~/.tmux.conf`. For more information see [TPM][].
+
+``` tmux
+set -g @plugin 'christoomey/vim-tmux-navigator'
+run '~/.tmux/plugins/tpm/tpm'
+```
+
 Thanks to Christopher Sexton who provided the updated tmux configuration in
 [this blog post][].
 
@@ -236,6 +244,7 @@ script][] which has a more robust check.
 [Mislav Marohnić's]: http://mislav.uniqpath.com/
 [Mislav's original external script]: https://github.com/mislav/dotfiles/blob/master/bin/tmux-vim-select-pane
 [Vundle]: https://github.com/gmarik/vundle
+[TPM]: https://github.com/tmux-plugins/tpm
 [configuration section below]: #custom-key-bindings
 [this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
 [this gist]: https://gist.github.com/mislav/5189704
