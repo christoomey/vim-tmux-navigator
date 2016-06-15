@@ -47,10 +47,13 @@ Then run
 :PluginInstall
 ```
 
-### Tmux
+### tmux
 
-Add the following to your `tmux.conf` file to configure the tmux side of
-this customization.
+To configure the tmux side of this customization there are three options:
+
+#### Add a snippet
+
+Add the following to your `~/.tmux.conf` file:
 
 ``` tmux
 # Smart pane switching with awareness of Vim splits.
@@ -64,8 +67,11 @@ bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
 bind-key -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 ```
 
-Or optionally, when using the [TPM][] add the following lines to
-`~/.tmux.conf`. For more information see [TPM][].
+#### TPM
+
+If you'd prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
+copying the snippet.
+When using TPM, add the following lines to your ~/.tmux.conf:
 
 ``` tmux
 set -g @plugin 'christoomey/vim-tmux-navigator'
