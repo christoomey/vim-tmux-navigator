@@ -49,7 +49,7 @@ Then run
 
 ### tmux
 
-To configure the tmux side of this customization there are three options:
+To configure the tmux side of this customization there are two options:
 
 #### Add a snippet
 
