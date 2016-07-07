@@ -7,3 +7,6 @@ tmux bind-key -n C-j if-shell "$is_vim" "send-keys C-j"  "select-pane -D"
 tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k"  "select-pane -U"
 tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
 tmux bind-key -n C-\\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+
+# To enable clear screen using <Prefix><Ctrl+l>, uncomment the following line:
+# bind C-l send-keys 'C-l'
