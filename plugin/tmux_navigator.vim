@@ -82,22 +82,25 @@ function! s:TmuxAwareNavigate(direction)
 
     " Handle delay for moving out of zoomed tmux pane.
     " This wraps the tmux args conditionally.
+    " 0 to zoom out always. -1 can be used to never zoom out.
     let timeout = get(g:, 'tmux_navigator_zoomed_tmux_delay', 0.5)
     if timeout != 0
       let msg = 'Tmux is zoomed, not moving out.'
-      let curtime = reltimefloat(reltime())
-      if (a:direction != s:tried_moving_out_of_zoomed_tmux[0]
-            \ || curtime > (s:tried_moving_out_of_zoomed_tmux[1] + timeout))
-        " 0 to zoom out always
-        " -1 can be used to never zoom out.
-        let msg .= printf(' Trigger it again in %.1f seconds to zoom out.',
-              \ timeout)
-        let msg .= ' See the help for g:tmux_navigator_zoomed_tmux_delay.'
-        let s:tried_moving_out_of_zoomed_tmux = [a:direction, curtime]
+      if timeout > 0
+        let curtime = reltimefloat(reltime())
+        if (a:direction != s:tried_moving_out_of_zoomed_tmux[0]
+              \ || curtime > (s:tried_moving_out_of_zoomed_tmux[1] + timeout))
+          let msg .= printf(' Trigger it again in %.1f seconds to zoom out.',
+                \ timeout)
+          let msg .= ' See the help for g:tmux_navigator_zoomed_tmux_delay.'
+          let s:tried_moving_out_of_zoomed_tmux = [a:direction, curtime]
+        else
+          let s:tried_moving_out_of_zoomed_tmux = ['', 0]
+        endif
+      endif
+      if timeout < 0 || s:tried_moving_out_of_zoomed_tmux[1] != 0
         let args = "if -F '#{window_zoomed_flag}' 'display \"".msg."\"'"
               \ ." '".args."'"
-      else
-        let s:tried_moving_out_of_zoomed_tmux = ['', 0]
       endif
     endif
     silent call s:TmuxCommand(args)
