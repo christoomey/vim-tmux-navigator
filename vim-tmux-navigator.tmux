@@ -10,3 +10,9 @@ tmux bind-key -n C-\\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 
 # To enable clear screen using <Prefix><Ctrl+l>, uncomment the following line:
 # bind C-l send-keys 'C-l'
+
+# To send the clear screen command without requiring <Prefix> in tmux windows
+# with only a single pane, replace the "tmux bind-key -n C-l" above with the
+# following command:
+# tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l" \
+#     "if-shell \"[ '#{window_panes}' -gt 1 ]\" 'select-pane -R' 'send-keys C-l'"

@@ -134,6 +134,16 @@ bind C-l send-keys 'C-l'
 
 With this enabled you can use `<prefix> C-l` to clear the screen.
 
+The default `<Ctrl-l>` tmux binding can be further configured to send the clear
+screen command without pressing the tmux prefix key if the current window only
+has a single pane. To enable this behavior, replace the `bind-key -n C-l` line
+in your `~/.tmux.conf` with the following:
+
+``` tmux
+bind-key -n C-l if-shell "$is_vim" "send-keys C-l" \
+    "if-shell \"[ '#{window_panes}' -gt 1 ]\" 'select-pane -R' 'send-keys C-l'"
+```
+
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
 #### Nesting
