@@ -10,6 +10,9 @@ let g:loaded_tmux_navigator = 1
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
 endif
+if !exists('g:tmux_navigator_zoomed_tmux_delay')
+  let g:tmux_navigator_zoomed_tmux_delay = 0.5
+endif
 
 function! s:TmuxOrTmateExecutable()
   return (match($TMUX, 'tmate') != -1 ? 'tmate' : 'tmux')
@@ -83,7 +86,7 @@ function! s:TmuxAwareNavigate(direction)
     " Handle delay for moving out of zoomed tmux pane.
     " This wraps the tmux args conditionally.
     " 0 to zoom out always. -1 can be used to never zoom out.
-    let timeout = get(g:, 'tmux_navigator_zoomed_tmux_delay', 0.5)
+    let timeout = g:tmux_navigator_zoomed_tmux_delay
     if timeout != 0
       let msg = 'Tmux is zoomed, not moving out.'
       if timeout > 0
