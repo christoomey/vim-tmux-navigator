@@ -7,6 +7,8 @@ if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
 endif
 let g:loaded_tmux_navigator = 1
 
+let s:os_tmux_navigator = expand('<sfile>:h:h') . "/scripts/os_tmux_navigator.sh"
+
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
 endif
@@ -70,7 +72,20 @@ function! s:TmuxAwareNavigate(direction)
     if g:tmux_navigator_save_on_switch
       update
     endif
-    let args = 'select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
+
+    if a:direction == "h"
+      let g:param = "left"
+    elseif a:direction == "j"
+      let g:param = "down"
+    elseif a:direction == "k"
+      let g:param = "up"
+    elseif a:direction == "l"
+      let g:param = "right"
+    endif
+
+    let args = "run '\"" . s:os_tmux_navigator . "\" " . g:param . "'"
+    echo args
+
     silent call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
       redraw!
