@@ -81,6 +81,49 @@ run '~/.tmux/plugins/tpm/tpm'
 Thanks to Christopher Sexton who provided the updated tmux configuration in
 [this blog post][].
 
+#### OS Window Navigator
+
+In case you wish to enable navigation across windows in your operating system,
+there is initial support for Mac OS X with the aid of
+[Hammerspoon](http://hammerspoon.org/). In order to do so, put the following
+code snippet in your `~/.hammerspoon/init.lua`:
+
+``` lua
+require("hs.ipc")
+
+if not hs.ipc.cliStatus(null, true) then
+  hs.ipc.cliInstall()
+end
+
+function nonRecursiveBind(mods, key, callback)
+  local hotkey
+  hotkey = hs.hotkey.bind(mods, key, function()
+    callback(hotkey, mods, key)
+  end)
+end
+
+function except(programName, callback)
+  return function(hotkey, mods, key)
+    local currentName = hs.window.focusedWindow():application():name()
+    if currentName == programName then
+      hotkey:disable()
+      hs.eventtap.keyStroke(mods, key)
+      hotkey:enable()
+    else
+      callback()
+    end
+  end
+end
+
+nonRecursiveBind({"ctrl"}, "H", except("iTerm2", function() hs.window.focusedWindow():focusWindowWest()  end))
+nonRecursiveBind({"ctrl"}, "J", except("iTerm2", function() hs.window.focusedWindow():focusWindowSouth() end))
+nonRecursiveBind({"ctrl"}, "K", except("iTerm2", function() hs.window.focusedWindow():focusWindowNorth() end))
+nonRecursiveBind({"ctrl"}, "L", except("iTerm2", function() hs.window.focusedWindow():focusWindowEast()  end))
+```
+
+Now, reload your config file and, if you installed `vim-tmux-navigator` with `tpm`, you should be all set to
+navigate windows in your operating system using universal keybindings.
+
 Configuration
 -------------
 
