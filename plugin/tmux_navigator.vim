@@ -67,7 +67,8 @@ function! s:TmuxAwareNavigate(direction)
   " a) we're toggling between the last tmux pane;
   " b) we tried switching windows in vim but it didn't have effect.
   if tmux_last_pane || nr == winnr()
-    if g:tmux_navigator_save_on_switch
+    " Unly save the file if it has a filename
+    if g:tmux_navigator_save_on_switch && @% != ""
       update
     endif
     let args = 'select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
