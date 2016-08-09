@@ -68,7 +68,10 @@ function! s:TmuxAwareNavigate(direction)
   " b) we tried switching windows in vim but it didn't have effect.
   if tmux_last_pane || nr == winnr()
     if g:tmux_navigator_save_on_switch
-      update
+      try
+        update
+      catch /^Vim\%((\a\+)\)\=:E32/
+      endtry
     endif
     let args = 'select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call s:TmuxCommand(args)
