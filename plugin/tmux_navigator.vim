@@ -73,7 +73,7 @@ function! s:TmuxAwareNavigate(direction)
       catch /^Vim\%((\a\+)\)\=:E32/
       endtry
     endif
-    let args = 'select-pane -' . tr(a:direction, 'phjkl', 'lLDUR')
+    let args = 'select-pane -t ' . $TMUX_PANE . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
     silent call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
       redraw!
