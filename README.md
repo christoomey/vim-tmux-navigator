@@ -111,9 +111,19 @@ Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
 
 ##### Autosave on leave
 
-    let g:tmux_navigator_save_on_switch = 1
+You can configure the plugin to write the current buffer, or all buffers, when navigating from Vim to tmux. This functionality is exposed via the `g:tmux_navigator_save_on_switch` variable, which can have either of the following values:
 
-This will execute the update command on leaving vim to a tmux pane. Default is Zero
+Value  | Behavior
+------ | ------
+1      | `:update` (write the current buffer, but only if changed)
+2      | `:wall` (write all buffers)
+
+To enable this, add the following (with the desired value) to your ~/.vimrc:
+
+```vim
+" Write all buffers before navigating from Vim to tmux pane
+let g:tmux_navigator_save_on_switch = 2
+```
 
 #### Tmux
 
