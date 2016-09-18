@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+function get_tty() {
+  tmux display-message -p "#{pane_tty}"
+}
+
+function main() {
+  ps -o state= -o comm= -t "$(get_tty)" \
+    | grep -iqE "^[^TXZ ]+ +(\\S+\\/)?g?($1)(diff)?$"
+}
+
+main "$@"

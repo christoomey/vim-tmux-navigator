@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
-tmux bind-key -n C-h if-shell "$is_vim" "send-keys C-h"  "select-pane -L"
-tmux bind-key -n C-j if-shell "$is_vim" "send-keys C-j"  "select-pane -D"
-tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k"  "select-pane -U"
-tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
-tmux bind-key -n C-\\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPTS_DIR="$CURRENT_DIR/scripts"
+
+function navigation_setup() {
+  local after bindkey cursor dir key isvim query select
+
+  dir="$2"
+  key="$(printf "%q" "$1")"
+
+  tmux bind-key -n C-$1 if-shell "$SCRIPTS_DIR/is-running 'view|n?vim?x?'" \
+    "send-keys C-$key" "run-shell '$SCRIPTS_DIR/if-nested $key $dir'"
+}
+
+navigation_setup 'h' 'L'
+navigation_setup 'j' 'D'
+navigation_setup 'k' 'U'
+navigation_setup 'l' 'R'
+navigation_setup '\' 'l'
