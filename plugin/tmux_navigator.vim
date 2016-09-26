@@ -57,6 +57,11 @@ function! s:NeedsVitalityRedraw()
   return exists('g:loaded_vitality') && v:version < 704 && !has("patch481")
 endfunction
 
+function! s:TmuxIsPaneZoomed()
+    call system(s:TmuxOrTmateExecutable().' list-panes -F "#F" | grep -q Z')
+    return v:shell_error == 0
+endfunction
+
 function! s:TmuxAwareNavigate(direction)
   let nr = winnr()
   let tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
@@ -66,7 +71,7 @@ function! s:TmuxAwareNavigate(direction)
   " Forward the switch panes command to tmux if:
   " a) we're toggling between the last tmux pane;
   " b) we tried switching windows in vim but it didn't have effect.
-  if tmux_last_pane || nr == winnr()
+  if !s:TmuxIsPaneZoomed() && (tmux_last_pane || nr == winnr())
     if g:tmux_navigator_save_on_switch == 1
       try
         update " save the active buffer. See :help update
