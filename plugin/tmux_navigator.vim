@@ -57,11 +57,18 @@ function! s:NeedsVitalityRedraw()
   return exists('g:loaded_vitality') && v:version < 704 && !has("patch481")
 endfunction
 
+function! s:TmuxIsZoomed() 
+   return system("tmux display-message -p '#{window_flags}' |grep -c Z") != 0
+endfunction
+
 function! s:TmuxAwareNavigate(direction)
   let nr = winnr()
   let tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
   if !tmux_last_pane
     call s:VimNavigate(a:direction)
+    if s:TmuxIsZoomed()
+        return
+    endif
   endif
   " Forward the switch panes command to tmux if:
   " a) we're toggling between the last tmux pane;
