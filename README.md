@@ -131,6 +131,12 @@ Alter each of the five lines of the tmux configuration listed above to use your
 custom mappings. **Note** each line contains two references to the desired
 mapping.
 
+#### Moving out of zoomed Tmux pane
+
+    let g:tmux_navigator_zoom_out_navigation = 1
+
+This will enable moving out of zoomed Tmux pane. Default is `0`.
+
 ### Additional Customization
 
 #### Restoring Clear Screen (C-l)
