@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+HELPERS_DIR="$CURRENT_DIR/helpers"
+
+source "$HELPERS_DIR/direction_utils.sh"
+source "$HELPERS_DIR/nesting_utils.sh"
+
+function get_cursor_pos() {
+  tmux display-message -p '#{cursor_x},#{cursor_y}'
+}
+
+function navigation_delay() {
+  tmux show-options -gv @navigation-delay 2> /dev/null || return 0.2
+}
+
+function main() {
+  local cursor dir key
+
+  key="$1"
+  dir="$2"
+
+  cursor="$(get_cursor_pos)"
+  if is_nested; then
+    tmux send-keys C-$key
+    if $CURRENT_DIR/is-running "ssh"; then
+      sleep $(navigation_delay)
+    fi
+  fi
+
+  if can_select_pane $dir && [[ "$cursor" == "$(get_cursor_pos)" ]]; then
+    select_pane $dir
+  fi
+}
+
+main "$@"
