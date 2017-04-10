@@ -125,4 +125,13 @@ if s:UseTmuxNavigatorMappings()
   nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+
+  " Nvim specific key mappings.
+  if exists(':tnoremap')
+    tnoremap <silent> <c-h> <c-\><c-n>:TmuxNavigateLeft<cr>
+    tnoremap <silent> <c-j> <c-\><c-n>:TmuxNavigateDown<cr>
+    tnoremap <silent> <c-k> <c-\><c-n>:TmuxNavigateUp<cr>
+    tnoremap <silent> <c-l> <c-\><c-n>:TmuxNavigateRight<cr>
+    tnoremap <silent> <c-\> <c-\><c-n>:TmuxNavigatePrevious<cr>
+  endif
 endif
