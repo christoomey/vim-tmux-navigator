@@ -271,7 +271,7 @@ This goes in your .tmux.conf
 set-option -gw xterm-keys on
 ```
 
-(Source: [Stack Overflow][http://stackoverflow.com/questions/15445481/mapping-arrow-keys-when-running-tmux])
+(Source: [Stack Overflow](http://stackoverflow.com/questions/15445481/mapping-arrow-keys-when-running-tmux))
 
 ### It Doesn't Work in tmate
 
