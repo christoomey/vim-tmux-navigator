@@ -234,6 +234,7 @@ sources the non-interactive config.
 
 You might have to tell your tmux how to send arrow keys to vim and tell vim how to expect them.
 Change your tmux config and your .vimrc by adding the following parts.
+
 This goes in your .vimrc:
 ``` vim
 if &term =~ '^screen' && exists('$TMUX')
@@ -266,7 +267,7 @@ if &term =~ '^screen' && exists('$TMUX')
 endif
 ```
 
-This goes in your .tmux.conf
+This goes in your .tmux.conf:
 ``` tmux
 set-option -gw xterm-keys on
 ```
