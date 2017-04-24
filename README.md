@@ -71,7 +71,7 @@ bind-key -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 
 If you'd prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
 copying the snippet.
-When using TPM, add the following lines to your ~/.tmux.conf:
+When using TPM, add the following lines to your `~/.tmux.conf`:
 
 ``` tmux
 set -g @plugin 'christoomey/vim-tmux-navigator'
@@ -118,7 +118,7 @@ Value  | Behavior
 1      | `:update` (write the current buffer, but only if changed)
 2      | `:wall` (write all buffers)
 
-To enable this, add the following (with the desired value) to your ~/.vimrc:
+To enable this, add the following (with the desired value) to your `~/.vimrc`:
 
 ```vim
 " Write all buffers before navigating from Vim to tmux pane
@@ -136,7 +136,7 @@ We provide an option, `g:tmux_navigator_disable_when_zoomed`, which can be used
 to disable this unzooming behavior, keeping all navigation within Vim until the
 tmux pane is explicitly unzoomed.
 
-To disable navigation when zoomed, add the following to your ~/.vimrc:
+To disable navigation when zoomed, add the following to your `~/.vimrc`:
 
 ```vim
 " Disable tmux navigator when zooming the Vim pane
@@ -233,9 +233,9 @@ sources the non-interactive config.
 ### It Doesn't Work with the arrow keys
 
 You might have to tell your tmux how to send arrow keys to vim and tell vim how to expect them.
-Change your tmux config and your .vimrc by adding the following parts.
+Change your tmux config and your `~/.vimrc` by adding the following parts.
 
-This goes in your .vimrc:
+This goes in your `~/.vimrc`:
 ``` vim
 if &term =~ '^screen' && exists('$TMUX')
     set mouse+=a
@@ -267,7 +267,7 @@ if &term =~ '^screen' && exists('$TMUX')
 endif
 ```
 
-This goes in your .tmux.conf:
+This goes in your `~/.tmux.conf`:
 ``` tmux
 set-option -gw xterm-keys on
 ```
