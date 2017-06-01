@@ -76,7 +76,7 @@ bind-key -T copy-mode-vi C-\ select-pane -l
 
 If you'd prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
 copying the snippet.
-When using TPM, add the following lines to your ~/.tmux.conf:
+When using TPM, add the following lines to your `~/.tmux.conf`:
 
 ``` tmux
 set -g @plugin 'christoomey/vim-tmux-navigator'
@@ -123,7 +123,7 @@ Value  | Behavior
 1      | `:update` (write the current buffer, but only if changed)
 2      | `:wall` (write all buffers)
 
-To enable this, add the following (with the desired value) to your ~/.vimrc:
+To enable this, add the following (with the desired value) to your `~/.vimrc`:
 
 ```vim
 " Write all buffers before navigating from Vim to tmux pane
@@ -141,7 +141,7 @@ We provide an option, `g:tmux_navigator_disable_when_zoomed`, which can be used
 to disable this unzooming behavior, keeping all navigation within Vim until the
 tmux pane is explicitly unzoomed.
 
-To disable navigation when zoomed, add the following to your ~/.vimrc:
+To disable navigation when zoomed, add the following to your `~/.vimrc`:
 
 ```vim
 " Disable tmux navigator when zooming the Vim pane
@@ -234,6 +234,50 @@ to a non-Vim tmux pane is delayed, it might be due to a slow shell startup.
 Consider moving code from your shell's non-interactive rc file (e.g.,
 `~/.zshenv`) into the interactive startup file (e.g., `~/.zshrc`) as Vim only
 sources the non-interactive config.
+
+### It Doesn't Work with the arrow keys
+
+You might have to tell your tmux how to send arrow keys to vim and tell vim how to expect them.
+Change your tmux config and your `~/.vimrc` by adding the following parts.
+
+This goes in your `~/.vimrc`:
+``` vim
+if &term =~ '^screen' && exists('$TMUX')
+    set mouse+=a
+    " tmux knows the extended mouse mode
+    set ttymouse=xterm2
+    " tmux will send xterm-style keys when xterm-keys is on
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+    execute "set <xHome>=\e[1;*H"
+    execute "set <xEnd>=\e[1;*F"
+    execute "set <Insert>=\e[2;*~"
+    execute "set <Delete>=\e[3;*~"
+    execute "set <PageUp>=\e[5;*~"
+    execute "set <PageDown>=\e[6;*~"
+    execute "set <xF1>=\e[1;*P"
+    execute "set <xF2>=\e[1;*Q"
+    execute "set <xF3>=\e[1;*R"
+    execute "set <xF4>=\e[1;*S"
+    execute "set <F5>=\e[15;*~"
+    execute "set <F6>=\e[17;*~"
+    execute "set <F7>=\e[18;*~"
+    execute "set <F8>=\e[19;*~"
+    execute "set <F9>=\e[20;*~"
+    execute "set <F10>=\e[21;*~"
+    execute "set <F11>=\e[23;*~"
+    execute "set <F12>=\e[24;*~"
+endif
+```
+
+This goes in your `~/.tmux.conf`:
+``` tmux
+set-option -gw xterm-keys on
+```
+
+(Source: [Stack Overflow](http://stackoverflow.com/questions/15445481/mapping-arrow-keys-when-running-tmux))
 
 ### It Doesn't Work in tmate
 
