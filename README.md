@@ -148,6 +148,15 @@ To disable navigation when zoomed, add the following to your ~/.vimrc:
 let g:tmux_navigator_disable_when_zoomed = 1
 ```
 
+##### Use display-panes Command on leave
+
+You can configure the plugin to also emit the `display-panes` command to tmux when leaving Vim. This will display an overlay helping to find the target (e.g. in case there are multiple splits below/beside Vim).
+
+```vim
+" Display overlay with target pane
+let g:tmux_navigator_display_panes = 1
+```
+
 #### Tmux
 
 Alter each of the five lines of the tmux configuration listed above to use your

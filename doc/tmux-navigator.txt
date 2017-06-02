@@ -24,6 +24,9 @@ CONFIGURATION                             *tmux-navigator-configuration*
 * Custom Key Bindings
  let g:tmux_navigator_no_mappings = 1
 
+* Activate display-panes command on switching out of vim
+ let g:tmux_navigator_display_panes = 1
+
  nnoremap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
  nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
  nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
