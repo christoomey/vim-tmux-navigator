@@ -185,6 +185,10 @@ the innermost tmux session and the vim sessions within that one. This works
 better than the default behaviour if you use the outer Tmux sessions as relays
 to different hosts and have all instances of vim on remote hosts.
 
+To easily extend the default pattern, you may use the `$VIM_TMUX_NAV_PAT`
+environment variable, and assign your custom pattern to it. To make it work,
+only make sure that the variable is exported before launching Tmux.
+
 Similarly, if you like to nest tmux locally, add `|tmux` to the expression.
 
 This behaviour means that you can't leave the innermost session with Ctrl-hjkl
