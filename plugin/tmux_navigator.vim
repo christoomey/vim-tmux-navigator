@@ -125,4 +125,11 @@ if s:UseTmuxNavigatorMappings()
   nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+
+  " Handle insert mode switching - <c-o> switches to normal mode for one command
+  inoremap <silent> <c-o><c-h> :TmuxNavigateLeft<cr>
+  inoremap <silent> <c-o><c-j> :TmuxNavigateDown<cr>
+  inoremap <silent> <c-o><c-k> :TmuxNavigateUp<cr>
+  inoremap <silent> <c-o><c-l> :TmuxNavigateRight<cr>
+  inoremap <silent> <c-o><c-\> :TmuxNavigatePrevious<cr>
 endif
