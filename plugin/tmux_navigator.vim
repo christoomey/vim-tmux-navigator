@@ -113,6 +113,54 @@ function! s:VimNavigate(direction)
   endtry
 endfunction
 
+function! s:TmuxResizeCmd(direction)
+  if s:InTmuxSession()
+    call s:TmuxAwareResize(a:direction)
+  else
+    call s:VimResize(a:direction)
+  endif
+endfunction
+
+" if we can't resize vim, we let tmux deal with it
+function! s:TmuxAwareResize(direction)
+  if !s:VimResize(a:direction)
+    let l:args = 'resize-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'hjkl', 'LDUR')
+    silent call s:TmuxCommand(l:args)
+    if s:NeedsVitalityRedraw()
+      redraw!
+    endif
+  endif
+endfunction
+
+" try to resize vim current window return false if we can't
+function! s:VimResize(direction)
+  let l:nr = winnr()
+  execute 'wincmd ' . tr(a:direction, 'hjkl', 'ljjl')
+  let l:same_window = (l:nr == winnr())
+  if l:same_window
+    execute 'wincmd ' . tr(a:direction, 'hjkl', 'hkkh')
+    let l:same_window = (l:nr == winnr())
+    if l:same_window
+      return 0
+    endif
+    let l:real_direction = tr(a:direction, 'hjkl', '+-+-')
+  else
+    let l:real_direction = tr(a:direction, 'hjkl', '-+-+')
+  endif
+  execute l:nr . 'wincmd w'
+  if (a:direction == 'h') || (a:direction == 'l')
+    execute 'vertical res ' . l:real_direction . '2'
+  else
+    execute 'res ' . l:real_direction . '2'
+  endif
+  return 1
+endfunction
+
+command! TmuxResizeLeft call s:TmuxResizeCmd('h')
+command! TmuxResizeDown call s:TmuxResizeCmd('j')
+command! TmuxResizeUp call s:TmuxResizeCmd('k')
+command! TmuxResizeRight call s:TmuxResizeCmd('l')
+
 command! TmuxNavigateLeft call s:TmuxWinCmd('h')
 command! TmuxNavigateDown call s:TmuxWinCmd('j')
 command! TmuxNavigateUp call s:TmuxWinCmd('k')
