@@ -12,3 +12,12 @@ tmux bind-key -T copy-mode-vi C-j select-pane -D
 tmux bind-key -T copy-mode-vi C-k select-pane -U
 tmux bind-key -T copy-mode-vi C-l select-pane -R
 tmux bind-key -T copy-mode-vi C-\\ select-pane -l
+
+tmux bind-key -n C-H if-shell "$is_vim" "send-keys C-H"  "resize-pane -L"
+tmux bind-key -n C-J if-shell "$is_vim" "send-keys C-J"  "resize-pane -D"
+tmux bind-key -n C-K if-shell "$is_vim" "send-keys C-K"  "resize-pane -U"
+tmux bind-key -n C-L if-shell "$is_vim" "send-keys C-L"  "resize-pane -R"
+tmux bind-key -T copy-mode-vi C-H resize-pane -L
+tmux bind-key -T copy-mode-vi C-J resize-pane -D
+tmux bind-key -T copy-mode-vi C-K resize-pane -U
+tmux bind-key -T copy-mode-vi C-L resize-pane -R
