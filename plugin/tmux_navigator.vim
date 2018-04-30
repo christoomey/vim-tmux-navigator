@@ -122,3 +122,31 @@ function! s:TmuxAwareNavigate(direction)
     let s:tmux_is_last_pane = 0
   endif
 endfunction
+
+" Indicate to tmux keybindings that we handle $TMUX_PANE.
+if exists('*jobstart')
+  let s:async_f = 'jobstart'
+elseif exists('*job_start')
+  let s:async_f = 'job_start'
+else
+  let s:async_f = 'system'
+endif
+
+function! s:setup_indicator() abort
+  call call(s:async_f, [s:GetTmuxCommand(['set', '-a', '@tmux_navigator', '-'.$TMUX_PANE.'-'])])
+endfunction
+
+function! s:remove_indicator() abort
+  let cur = s:TmuxCommand(['show', '-v', '@tmux_navigator'])
+  let new = substitute(cur, '-'.$TMUX_PANE.'-', '', '')
+  call call(s:async_f, [s:GetTmuxCommand(['set', '@tmux_navigator', new])])
+endfunction
+
+augroup tmux_navigator
+  autocmd VimEnter * call s:setup_indicator()
+  autocmd VimLeave * call s:remove_indicator()
+  if exists('##VimSuspend')
+    autocmd VimSuspend * call s:remove_indicator()
+    autocmd VimResume * call s:setup_indicator()
+  endif
+augroup END
