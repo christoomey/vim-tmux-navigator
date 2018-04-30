@@ -28,7 +28,7 @@ function! s:InTmuxSession()
 endfunction
 
 function! s:TmuxVimPaneIsZoomed()
-  return s:TmuxCommand("display-message -p '#{window_zoomed_flag}'") == 1
+  return s:TmuxCommand(['display-message', '-p', '#{window_zoomed_flag}']) == 1
 endfunction
 
 function! s:TmuxSocket()
@@ -36,13 +36,17 @@ function! s:TmuxSocket()
   return split($TMUX, ',')[0]
 endfunction
 
+function! s:GetTmuxCommand(args)
+  return [s:TmuxOrTmateExecutable(), '-S', s:TmuxSocket()] + a:args
+endfunction
+
 function! s:TmuxCommand(args)
-  let cmd = s:TmuxOrTmateExecutable() . ' -S ' . s:TmuxSocket() . ' ' . a:args
-  return system(cmd)
+  let cmd = s:GetTmuxCommand(a:args)
+  return substitute(system(cmd), '\n$', '', '')
 endfunction
 
 function! s:TmuxPaneCurrentCommand()
-  echo s:TmuxCommand("display-message -p '#{pane_current_command}'")
+  echo s:TmuxCommand(['display-message', '-p', '#{pane_current_command}'])
 endfunction
 command! TmuxPaneCurrentCommand call s:TmuxPaneCurrentCommand()
 
@@ -94,8 +98,8 @@ function! s:TmuxAwareNavigate(direction)
       catch /^Vim\%((\a\+)\)\=:E141/ " catches the no file name error
       endtry
     endif
-    let args = 'select-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
-    silent call s:TmuxCommand(args)
+    let args = ['select-pane', '-t', $TMUX_PANE, '-'.tr(a:direction, 'phjkl', 'lLDUR')]
+    call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
       redraw!
     endif
