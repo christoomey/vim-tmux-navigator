@@ -40,10 +40,17 @@ function! s:GetTmuxCommand(args)
   return [s:TmuxOrTmateExecutable(), '-S', s:TmuxSocket()] + a:args
 endfunction
 
-function! s:TmuxCommand(args)
-  let cmd = s:GetTmuxCommand(a:args)
-  return substitute(system(cmd), '\n$', '', '')
-endfunction
+if has('nvim')
+  function! s:TmuxCommand(args)
+    return substitute(system(s:GetTmuxCommand(a:args)), '\n$', '', '')
+  endfunction
+else
+  function! s:TmuxCommand(args)
+    " Vim does not support a list for `system()`.
+    let cmd = join(map(s:GetTmuxCommand(a:args), 'fnameescape(v:val)'))
+    return substitute(system(cmd), '\n$', '', '')
+  endfunction
+endif
 
 function! s:TmuxPaneCurrentCommand()
   echo s:TmuxCommand(['display-message', '-p', '#{pane_current_command}'])
