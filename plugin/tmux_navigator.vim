@@ -7,6 +7,37 @@ if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
 endif
 let g:loaded_tmux_navigator = 1
 
+function! s:VimNavigate(direction)
+  try
+    execute 'wincmd ' . a:direction
+  catch
+    echohl ErrorMsg | echo 'E11: Invalid in command-line window; <CR> executes, CTRL-C quits: wincmd k' | echohl None
+  endtry
+endfunction
+
+if !get(g:, 'tmux_navigator_no_mappings', 0)
+  nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+  nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+  nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+  nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+  nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+endif
+
+if empty($TMUX)
+  command! TmuxNavigateLeft call s:VimNavigate('h')
+  command! TmuxNavigateDown call s:VimNavigate('j')
+  command! TmuxNavigateUp call s:VimNavigate('k')
+  command! TmuxNavigateRight call s:VimNavigate('l')
+  command! TmuxNavigatePrevious call s:VimNavigate('p')
+  finish
+endif
+
+command! TmuxNavigateLeft call s:TmuxAwareNavigate('h')
+command! TmuxNavigateDown call s:TmuxAwareNavigate('j')
+command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
+command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
+command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
+
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
 endif
@@ -17,14 +48,6 @@ endif
 
 function! s:TmuxOrTmateExecutable()
   return (match($TMUX, 'tmate') != -1 ? 'tmate' : 'tmux')
-endfunction
-
-function! s:UseTmuxNavigatorMappings()
-  return !get(g:, 'tmux_navigator_no_mappings', 0)
-endfunction
-
-function! s:InTmuxSession()
-  return $TMUX != ''
 endfunction
 
 function! s:TmuxVimPaneIsZoomed()
@@ -51,15 +74,6 @@ augroup tmux_navigator
   au!
   autocmd WinEnter * let s:tmux_is_last_pane = 0
 augroup END
-
-" Like `wincmd` but also change tmux panes instead of vim windows when needed.
-function! s:TmuxWinCmd(direction)
-  if s:InTmuxSession()
-    call s:TmuxAwareNavigate(a:direction)
-  else
-    call s:VimNavigate(a:direction)
-  endif
-endfunction
 
 function! s:NeedsVitalityRedraw()
   return exists('g:loaded_vitality') && v:version < 704 && !has("patch481")
@@ -104,25 +118,3 @@ function! s:TmuxAwareNavigate(direction)
     let s:tmux_is_last_pane = 0
   endif
 endfunction
-
-function! s:VimNavigate(direction)
-  try
-    execute 'wincmd ' . a:direction
-  catch
-    echohl ErrorMsg | echo 'E11: Invalid in command-line window; <CR> executes, CTRL-C quits: wincmd k' | echohl None
-  endtry
-endfunction
-
-command! TmuxNavigateLeft call s:TmuxWinCmd('h')
-command! TmuxNavigateDown call s:TmuxWinCmd('j')
-command! TmuxNavigateUp call s:TmuxWinCmd('k')
-command! TmuxNavigateRight call s:TmuxWinCmd('l')
-command! TmuxNavigatePrevious call s:TmuxWinCmd('p')
-
-if s:UseTmuxNavigatorMappings()
-  nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-  nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-  nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-  nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-  nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
-endif
