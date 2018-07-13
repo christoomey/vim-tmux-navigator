@@ -116,7 +116,10 @@ Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
 
 ##### Autosave on leave
 
-You can configure the plugin to write the current buffer, or all buffers, when navigating from Vim to tmux. This functionality is exposed via the `g:tmux_navigator_save_on_switch` variable, which can have either of the following values:
+You can configure the plugin to write the current buffer, or all buffers, when
+navigating from Vim to tmux. This functionality is exposed via the
+`g:tmux_navigator_save_on_switch` variable, which can have either of the
+following values:
 
 Value  | Behavior
 ------ | ------
@@ -211,10 +214,17 @@ altered to avoid conflicting with the mappings from the plugin.
 
 Another option is that the pattern matching included in the `.tmux.conf` is
 not recognizing that Vim is active. To check that tmux is properly recognizing
-Vim, use the provided Vim command `:TmuxPaneCurrentCommand`. The output of
-that command should be a string like 'vim', 'Vim', 'vimdiff', etc. If you
-encounter a different output please [open an issue][] with as much info about
-your OS, Vim version, and tmux version as possible.
+Vim, use the provided Vim command `:TmuxNavigatorProcessList`. The output of
+that command should be a list like:
+
+```
+Ss   -zsh
+S+   vim
+S+   tmux
+```
+
+If you encounter a different output please [open an issue][] with as much info
+about your OS, Vim version, and tmux version as possible.
 
 [open an issue]: https://github.com/christoomey/vim-tmux-navigator/issues/new
 

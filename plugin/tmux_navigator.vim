@@ -64,10 +64,10 @@ function! s:TmuxCommand(args)
   return system(cmd)
 endfunction
 
-function! s:TmuxPaneCurrentCommand()
-  echo s:TmuxCommand("display-message -p '#{pane_current_command}'")
+function! s:TmuxNavigatorProcessList()
+  echo s:TmuxCommand("run-shell 'ps -o state= -o comm= -t ''''#{pane_tty}'''''")
 endfunction
-command! TmuxPaneCurrentCommand call s:TmuxPaneCurrentCommand()
+command! TmuxNavigatorProcessList call s:TmuxNavigatorProcessList()
 
 let s:tmux_is_last_pane = 0
 augroup tmux_navigator
