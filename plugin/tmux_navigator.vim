@@ -139,13 +139,19 @@ else
   let s:async_f = 'system'
 endif
 
+function! s:get_indicator() abort
+  return s:TmuxCommand(['show', '-v', '@tmux_navigator'])
+endfunction
+command! TmuxNavigatorPaneIndicator echo s:get_indicator()
+
 function! s:setup_indicator() abort
   call call(s:async_f, [s:GetTmuxCommand(['set', '-a', '@tmux_navigator', '-'.$TMUX_PANE.'-'])])
 endfunction
 
 function! s:remove_indicator() abort
-  let cur = s:TmuxCommand(['show', '-v', '@tmux_navigator'])
-  let new = substitute(cur, '-'.$TMUX_PANE.'-', '', '')
+  let cur = s:get_indicator()
+  " Remove indicators globally (especially important with nested Vim in :term).
+  let new = substitute(cur, '-'.$TMUX_PANE.'-', '', 'g')
   call call(s:async_f, [s:GetTmuxCommand(['set', '@tmux_navigator', new])])
 endfunction
 
