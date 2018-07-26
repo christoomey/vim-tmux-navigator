@@ -132,11 +132,17 @@ endfunction
 
 " Indicate to tmux keybindings that we handle $TMUX_PANE.
 if exists('*jobstart')
-  let s:async_f = 'jobstart'
+  function! s:setup_indicator() abort
+    call call('jobstart', [s:GetTmuxCommand(['set', '-a', '@tmux_navigator', '-'.$TMUX_PANE.'-'])])
+  endfunction
 elseif exists('*job_start')
-  let s:async_f = 'job_start'
+  function! s:setup_indicator() abort
+    call call('job_start', [s:GetTmuxCommand(['set', '-a', '@tmux_navigator', '-'.$TMUX_PANE.'-'])])
+  endfunction
 else
-  let s:async_f = 'system'
+  function! s:setup_indicator() abort
+    call s:TmuxCommand(['set', '-a', '@tmux_navigator', '-'.$TMUX_PANE.'-'])
+  endfunction
 endif
 
 function! s:get_indicator() abort
@@ -144,15 +150,11 @@ function! s:get_indicator() abort
 endfunction
 command! TmuxNavigatorPaneIndicator echo s:get_indicator()
 
-function! s:setup_indicator() abort
-  call call(s:async_f, [s:GetTmuxCommand(['set', '-a', '@tmux_navigator', '-'.$TMUX_PANE.'-'])])
-endfunction
-
 function! s:remove_indicator() abort
   let cur = s:get_indicator()
   " Remove indicators globally (especially important with nested Vim in :term).
   let new = substitute(cur, '-'.$TMUX_PANE.'-', '', 'g')
-  call call(s:async_f, [s:GetTmuxCommand(['set', '@tmux_navigator', new])])
+  call s:TmuxCommand(['set', '@tmux_navigator', new])
 endfunction
 
 augroup tmux_navigator
