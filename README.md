@@ -245,6 +245,12 @@ Consider moving code from your shell's non-interactive rc file (e.g.,
 `~/.zshenv`) into the interactive startup file (e.g., `~/.zshrc`) as Vim only
 sources the non-interactive config.
 
+### It doesn't work in Vim's `terminal` mode
+
+Terminal mode is currently unsupported as adding this plugin's mappings there 
+causes conflict with movement mappings for FZF (it also uses terminal mode). 
+There's a conversation about this in https://github.com/christoomey/vim-tmux-navigator/pull/172
+
 ### It Doesn't Work in tmate
 
 [tmate][] is a tmux fork that aids in setting up remote pair programming
