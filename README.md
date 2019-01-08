@@ -6,7 +6,7 @@ configuration described in [this gist][]. When combined with a set of tmux
 key bindings, the plugin will allow you to navigate seamlessly between
 vim and tmux splits using a consistent set of hotkeys.
 
-**NOTE**: This requires tmux v1.8 or higher.
+**NOTE**: This requires tmux v1.8 or higher and tmux must be present in Vim's `PATH`.
 
 Usage
 -----
