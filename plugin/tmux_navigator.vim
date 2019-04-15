@@ -23,20 +23,26 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 endif
 
-if empty($TMUX)
+if exists("g:tmux_navigator_forward_script")
+  command! TmuxNavigateLeft call s:ScriptNavigate('h')
+  command! TmuxNavigateDown call s:ScriptNavigate('j')
+  command! TmuxNavigateUp call s:ScriptNavigate('k')
+  command! TmuxNavigateRight call s:ScriptNavigate('l')
+  command! TmuxNavigatePrevious call s:ScriptNavigate('p')
+elseif empty($TMUX)
   command! TmuxNavigateLeft call s:VimNavigate('h')
   command! TmuxNavigateDown call s:VimNavigate('j')
   command! TmuxNavigateUp call s:VimNavigate('k')
   command! TmuxNavigateRight call s:VimNavigate('l')
   command! TmuxNavigatePrevious call s:VimNavigate('p')
   finish
+else
+  command! TmuxNavigateLeft call s:TmuxAwareNavigate('h')
+  command! TmuxNavigateDown call s:TmuxAwareNavigate('j')
+  command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
+  command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
+  command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
 endif
-
-command! TmuxNavigateLeft call s:TmuxAwareNavigate('h')
-command! TmuxNavigateDown call s:TmuxAwareNavigate('j')
-command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
-command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
-command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
 
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
@@ -64,6 +70,11 @@ function! s:TmuxCommand(args)
   return system(cmd)
 endfunction
 
+function! s:ForwardScript(args)
+  let cmd = g:tmux_navigator_forward_script . " -V " . a:args
+  return system(cmd)
+endfunction
+
 function! s:TmuxNavigatorProcessList()
   echo s:TmuxCommand("run-shell 'ps -o state= -o comm= -t ''''#{pane_tty}'''''")
 endfunction
@@ -84,6 +95,16 @@ function! s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge)
     return 0
   endif
   return a:tmux_last_pane || a:at_tab_page_edge
+endfunction
+
+function! s:ScriptNavigate(direction)
+  let nr = winnr()
+  call s:VimNavigate(a:direction)
+  let at_tab_page_edge = (nr == winnr())
+  if at_tab_page_edge
+      let args = tr(a:direction, 'phjkl', 'lLDUR')
+      call s:ForwardScript(args)
+  endif
 endfunction
 
 function! s:TmuxAwareNavigate(direction)

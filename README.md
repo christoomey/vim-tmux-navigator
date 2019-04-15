@@ -172,6 +172,17 @@ With this enabled you can use `<prefix> C-l` to clear the screen.
 
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
+#### Forwarding Commands to External Script
+
+You can configure the plugin to send commands to an external script instead of
+directly to tmux. This functionality is exposed via the
+`g:tmux_navigator_forward_script` variable, which can be set to an executable
+in your path. The script can further process navigation actions before sending
+them on to tmux, or incorporate window manager navigation alongside tmux and
+vim navigation. If set, the plugin will invoke the forward script with `-V` and
+the single character navigation direction (e.g. `L` `D` `U`, or `R`) as
+arguments.
+
 #### Nesting
 If you like to nest your tmux sessions, this plugin is not going to work
 properly. It probably never will, as it would require detecting when Tmux would
