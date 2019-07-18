@@ -116,13 +116,13 @@ function! s:TmuxAwareNavigate(direction)
     " Prevent wrapping, if option is set, by checking if last pane in appropriate direction
     if g:tmux_navigator_no_wrap == 1
       if a:direction == 'h'
-        let args = 'if -F "#{?pane_at_left,0,1}" "' . args . '"'
+        let args = 'if-shell "expr #{pane_left}" "' . args . '"'
       elseif a:direction == 'j'
-        let args = 'if -F "#{?pane_at_bottom,0,1}" "' . args . '"'
+        let args = 'if-shell "expr #{window_height} - #{pane_bottom} - 1 " "' . args . '"'
       elseif a:direction == 'k'
-        let args = 'if -F "#{?pane_at_top,0,1}" "' . args . '"'
+        let args = 'if-shell "expr #{pane_top}" "' . args . '"'
       elseif a:direction == 'l'
-        let args = 'if -F "#{?pane_at_right,0,1}" "' . args . '"'
+        let args = 'if-shell "expr #{window_width} - #{pane_right} - 1" "' . args . '"'
       endif
     endif
     silent call s:TmuxCommand(args)

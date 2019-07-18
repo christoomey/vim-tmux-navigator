@@ -221,15 +221,15 @@ to conditionally wrap based on position on screen:
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
-bind-key -n C-h if-shell "$is_vim" "send-keys C-h"  "if -F '#{?pane_at_left,0,1}' 'select-pane -L'"
-bind-key -n C-j if-shell "$is_vim" "send-keys C-j"  "if -F '#{?pane_at_bottom,0,1}' 'select-pane -D'"
-bind-key -n C-k if-shell "$is_vim" "send-keys C-k"  "if -F '#{?pane_at_top,0,1}' 'select-pane -U'"
-bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "if -F '#{?pane_at_right,0,1}' 'select-pane -R'"
+bind-key -n C-h if-shell "$is_vim" "send-keys C-h"  "if-shell 'expr #{pane_left}' 'select-pane -L'"
+bind-key -n C-j if-shell "$is_vim" "send-keys C-j"  "if-shell 'expr #{window_height} - #{pane_bottom} - 1' 'select-pane -D'"
+bind-key -n C-k if-shell "$is_vim" "send-keys C-k"  "if-shell 'expr #{pane_top}' 'select-pane -U'"
+bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "if-shell 'expr #{window_width} - #{pane_right} - 1' 'select-pane -R'"
 bind-key -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
-bind-key -T copy-mode-vi C-h if -F '#{?pane_at_left,0,1}' 'select-pane -L'
-bind-key -T copy-mode-vi C-j if -F '#{?pane_at_bottom,0,1}' 'select-pane -D'
-bind-key -T copy-mode-vi C-k if -F '#{?pane_at_top,0,1}' 'select-pane -U'
-bind-key -T copy-mode-vi C-l if -F '#{?pane_at_right,0,1}' 'select-pane -R'
+bind-key -T copy-mode-vi C-h if-shell 'expr #{pane_left}' 'select-pane -L'
+bind-key -T copy-mode-vi C-j if-shell 'expr #{window_height} - #{pane_bottom} - 1' 'select-pane -D'
+bind-key -T copy-mode-vi C-k if-shell 'expr #{pane_top}' 'select-pane -U'
+bind-key -T copy-mode-vi C-l if-shell 'expr #{window_width} - #{pane_right} - 1' 'select-pane -R'
 bind-key -T copy-mode-vi C-\ select-pane -l
 ```
 
