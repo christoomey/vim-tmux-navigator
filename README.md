@@ -77,8 +77,6 @@ bind-key -T copy-mode-vi 'C-l' select-pane -R
 bind-key -T copy-mode-vi 'C-\' select-pane -l
 ```
 
-In tmux version 3 or higher, you will need to use `'C-\'` in place of `C-\`.
-
 #### TPM
 
 If you'd prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
