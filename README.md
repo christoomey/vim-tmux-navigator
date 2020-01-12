@@ -58,8 +58,7 @@ Add the following to your `~/.tmux.conf` file:
 ``` tmux
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+is_vim="ps -a |grep -qE '.*''#{s|/dev/||:pane_tty}'' .*+(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
 bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
@@ -219,15 +218,8 @@ altered to avoid conflicting with the mappings from the plugin.
 
 Another option is that the pattern matching included in the `.tmux.conf` is
 not recognizing that Vim is active. To check that tmux is properly recognizing
-Vim, use the provided Vim command `:TmuxNavigatorProcessList`. The output of
-that command should be a list like:
-
-```
-Ss   -zsh
-S+   vim
-S+   tmux
-```
-
+Vim is running in a tmux pane, use the provided Vim command `:TmuxNavigatorProcessList`. The output of
+that command should look like the output from `ps -a|grep vim`.
 If you encounter a different output please [open an issue][] with as much info
 about your OS, Vim version, and tmux version as possible.
 
