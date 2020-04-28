@@ -65,7 +65,7 @@ function! s:TmuxCommand(args)
 endfunction
 
 function! s:TmuxNavigatorProcessList()
-  echo s:TmuxCommand("run-shell 'ps -o state= -o comm= -t ''''#{pane_tty}'''''")
+  echo s:TmuxCommand("run-shell 'ps -a|grep -E \"''''#{s|/dev/||:pane_tty}'''' .*+(\\S+\\/)?g?(view|n?vim?x?)(diff)?$\"'")
 endfunction
 command! TmuxNavigatorProcessList call s:TmuxNavigatorProcessList()
 
