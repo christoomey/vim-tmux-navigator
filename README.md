@@ -47,10 +47,10 @@ Then run
 :PluginInstall
 ```
 
-If you are using Vim 8+, you don't need any plugin manager. Simply clone this repository inside `~/.vim/pack/plugin/start/` directory and restart Vim.
+If you are using Vim 8+, you don't need any plugin manager. Simply clone this repository inside `~/.vim/pack/plugin/start/config/` directory and restart Vim.
 
 ```
-git clone git@github.com:christoomey/vim-tmux-navigator.git ~/.vim/pack/plugin/start/
+git clone git@github.com:christoomey/vim-tmux-navigator.git ~/.vim/pack/plugin/start/config/
 ```
 
 
