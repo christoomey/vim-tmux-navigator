@@ -46,6 +46,10 @@ if !exists("g:tmux_navigator_disable_when_zoomed")
   let g:tmux_navigator_disable_when_zoomed = 0
 endif
 
+if !exists("g:tmux_navigator_disable_wrapping")
+  let g:tmux_navigator_disable_wrapping = 0
+endif
+
 function! s:TmuxOrTmateExecutable()
   return (match($TMUX, 'tmate') != -1 ? 'tmate' : 'tmux')
 endfunction
@@ -79,24 +83,38 @@ function! s:NeedsVitalityRedraw()
   return exists('g:loaded_vitality') && v:version < 704 && !has("patch481")
 endfunction
 
-function! s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge)
+function! s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge, tmux_pane_exists)
   if g:tmux_navigator_disable_when_zoomed && s:TmuxVimPaneIsZoomed()
     return 0
+  elseif a:tmux_last_pane
+    return 1
+  elseif a:at_tab_page_edge
+    if a:tmux_pane_exists || !g:tmux_navigator_disable_wrapping
+      return 1
+    endif
+  else
+    return 0
   endif
-  return a:tmux_last_pane || a:at_tab_page_edge
 endfunction
 
 function! s:TmuxAwareNavigate(direction)
   let nr = winnr()
-  let tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
-  if !tmux_last_pane
+  let l:tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
+  if !l:tmux_last_pane
     call s:VimNavigate(a:direction)
   endif
-  let at_tab_page_edge = (nr == winnr())
+  let l:at_tab_page_edge = (nr == winnr())
+  let l:long_direction = (a:direction ==# "k") ? "top"
+    \ : (a:direction ==# "j") ? "bottom"
+    \ : (a:direction ==# "h") ? "left"
+    \ : "right"
+  let l:tmux_pane_exists = !s:TmuxCommand("display-message -p '#{pane_at_" . l:long_direction . "}'")
   " Forward the switch panes command to tmux if:
   " a) we're toggling between the last tmux pane;
-  " b) we tried switching windows in vim but it didn't have effect.
-  if s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge)
+  " b) we tried switching windows in vim but it didn't have effect, and there 
+  " exists a tmux pane in the target direction, where 'target direction' must 
+  " not include wrapping if g:tmux_navigator_disable_wrapping is true.
+  if s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge, tmux_pane_exists)
     if g:tmux_navigator_save_on_switch == 1
       try
         update " save the active buffer. See :help update

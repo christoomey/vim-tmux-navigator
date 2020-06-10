@@ -184,6 +184,39 @@ With this enabled you can use `<prefix> C-l` to clear the screen.
 
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
+#### Disable Tmux Wrapping
+
+If you don't like wrapping at the outter edges of tmux panes, add the following to your ~/.vimrc:
+
+```vim
+" Disable tmux navigator when zooming the Vim pane
+let g:tmux_navigator_disable_wrapping = 1
+```
+
+and modify your ~/.tmux.conf mappings slightly to:
+
+``` tmux
+# Smart pane switching with awareness of Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h' { if-shell "[ $(tmux display-message -p '#{pane_at_left}')   -ne 1 ]" "select-pane -L" }
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' { if-shell "[ $(tmux display-message -p '#{pane_at_bottom}') -ne 1 ]" "select-pane -D" }
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' { if-shell "[ $(tmux display-message -p '#{pane_at_top}')    -ne 1 ]" "select-pane -U" }
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' { if-shell "[ $(tmux display-message -p '#{pane_at_right}')  -ne 1 ]" "select-pane -R" }
+tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+
+bind-key -T copy-mode-vi 'C-h' "[ $(tmux display-message -p '#{pane_at_left}')   -ne 1 ]" "select-pane -L"
+bind-key -T copy-mode-vi 'C-j' "[ $(tmux display-message -p '#{pane_at_bottom}') -ne 1 ]" "select-pane -D"
+bind-key -T copy-mode-vi 'C-k' "[ $(tmux display-message -p '#{pane_at_top}')    -ne 1 ]" "select-pane -U"
+bind-key -T copy-mode-vi 'C-l' "[ $(tmux display-message -p '#{pane_at_right}')  -ne 1 ]" "select-pane -R"
+bind-key -T copy-mode-vi 'C-\' select-pane -l
+```
+
 #### Nesting
 If you like to nest your tmux sessions, this plugin is not going to work
 properly. It probably never will, as it would require detecting when Tmux would
