@@ -46,8 +46,12 @@ if !exists("g:tmux_navigator_disable_when_zoomed")
   let g:tmux_navigator_disable_when_zoomed = 0
 endif
 
+if !exists("g:tmux_executable")
+  let g:tmux_executable = 'tmux'
+endif
+
 function! s:TmuxOrTmateExecutable()
-  return (match($TMUX, 'tmate') != -1 ? 'tmate' : 'tmux')
+  return (match($TMUX, 'tmate') != -1 ? 'tmate' : g:tmux_executable)
 endfunction
 
 function! s:TmuxVimPaneIsZoomed()
