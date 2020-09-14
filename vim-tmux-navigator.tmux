@@ -14,9 +14,9 @@ tmux setenv -g tmux_version "$tmux_version"
 #echo "{'version' : '${tmux_version}', 'sed_pat' : '${version_pat}' }" > ~/.tmux_version.json
 
 tmux if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+  "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
 tmux if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+  "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
 
 tmux bind-key -T copy-mode-vi C-h select-pane -L
 tmux bind-key -T copy-mode-vi C-j select-pane -D
