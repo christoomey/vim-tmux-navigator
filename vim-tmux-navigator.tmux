@@ -11,6 +11,8 @@ tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k"  "select-pane -U"
 tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
 tmux_version="$(tmux -V | sed -En '${version_pat}')"
 
+echo "{'version' : '${tmux_version}', 'sed_pat' : '${version_pat}' }" > ~/.tmux_version.json
+
 if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
     "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
 if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
