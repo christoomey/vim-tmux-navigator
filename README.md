@@ -51,7 +51,6 @@ If you are using Vim 8+, you don't need any plugin manager. Simply clone this re
 
 ```
 git clone git@github.com:christoomey/vim-tmux-navigator.git ~/.vim/pack/plugins/start/vim-tmux-navigator
-
 ```
 
 
