@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPTS_DIR="$CURRENT_DIR/scripts"
+
+source "$SCRIPTS_DIR/tmux_cmd_path.sh"
 
 version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
 
