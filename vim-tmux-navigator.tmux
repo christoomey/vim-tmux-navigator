@@ -6,11 +6,6 @@ source "$SCRIPTS_DIR/tmux_cmd_path.sh"
 
 version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
 
-# Try to find the executable path of the currently running 
-# tmux server, fallback to just "tmux" if not found or no 
-# procfs aviliable (non-linux).
-export TMUX_CMD_PATH=$(realpath "/proc/$(tmux display -p '#{pid}')/exe" 2> /dev/null || echo "tmux" | sed -z '$ s/\n$//')
-echo "tmux executable used: $TMUX_CMD_PATH"
 
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
