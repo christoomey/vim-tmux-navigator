@@ -1,7 +1,7 @@
 Vim Tmux Navigator
 ==================
 
-This plugin is a repackaging of [Mislav Marohnić's][] tmux-navigator
+This plugin is a repackaging of [Mislav Marohnić's](https://mislav.net/) tmux-navigator
 configuration described in [this gist][]. When combined with a set of tmux
 key bindings, the plugin will allow you to navigate seamlessly between
 vim and tmux splits using a consistent set of hotkeys.
@@ -282,7 +282,6 @@ not happening as expected, you can try using [Mislav's original external
 script][] which has a more robust check.
 
 [Brian Hogan]: https://twitter.com/bphogan
-[Mislav Marohnić's]: http://mislav.uniqpath.com/
 [Mislav's original external script]: https://github.com/mislav/dotfiles/blob/master/bin/tmux-vim-select-pane
 [Vundle]: https://github.com/gmarik/vundle
 [TPM]: https://github.com/tmux-plugins/tpm
