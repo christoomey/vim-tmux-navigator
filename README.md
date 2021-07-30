@@ -65,8 +65,7 @@ Add the following to your `~/.tmux.conf` file:
 ``` tmux
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+is_vim="ps -o state=,tty=,comm= | grep -iqE '^[^TXZ ]+ +#{s|/dev/||:pane_tty}\s+(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
 bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
@@ -289,3 +288,16 @@ script][] which has a more robust check.
 [configuration section below]: #custom-key-bindings
 [this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
 [this gist]: https://gist.github.com/mislav/5189704
+
+### Using The Plugin Freezes My Terminal
+
+Starting from version 3.2 of tmux users were reporting that using the key
+bindings to navigate panes would cause their terminal to freeze for 30+ seconds.
+Thankfully @kidonchu was able to figure out a new version of the vim detection
+script which also seems to be backwards compatible.
+
+See [this issue](https://github.com/christoomey/vim-tmux-navigator/issues/299) for more
+detail, but if you recent upgraded your tmux version and ran into the freezing
+issue, you'll want to update to [the new `is_vim` snippet][].
+
+[the new `is_vim` snippet]: https://github.com/christoomey/vim-tmux-navigator#add-a-snippet

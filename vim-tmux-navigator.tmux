@@ -2,8 +2,7 @@
 
 version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
 
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+is_vim="ps -o state=,tty=,comm= | grep -iqE '^[^TXZ ]+ +#{s|/dev/||:pane_tty}\s+(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 tmux bind-key -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
 tmux bind-key -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
 tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
