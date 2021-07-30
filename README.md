@@ -1,18 +1,16 @@
-Vim Tmux Navigator
-==================
+# Vim Tmux Navigator
 
 This plugin is a repackaging of [Mislav Marohnić's][] tmux-navigator
-configuration described in [this gist][]. When combined with a set of tmux
-key bindings, the plugin will allow you to navigate seamlessly between
-vim and tmux splits using a consistent set of hotkeys.
+configuration described in [this gist][]. When combined with a set of tmux key
+bindings, the plugin will allow you to navigate seamlessly between vim and tmux
+splits using a consistent set of hotkeys.
 
 **NOTE**: This requires tmux v1.8 or higher.
 
-Usage
------
+## Usage
 
-This plugin provides the following mappings which allow you to move between
-Vim panes and tmux splits seamlessly.
+This plugin provides the following mappings which allow you to move between Vim
+panes and tmux splits seamlessly.
 
 - `<ctrl-h>` => Left
 - `<ctrl-j>` => Down
@@ -26,8 +24,7 @@ the mappings.
 If you want to use alternate key mappings, see the [configuration section
 below][].
 
-Installation
-------------
+## Installation
 
 ### Vim
 
@@ -37,7 +34,7 @@ install the plugin:
 
 Add the following line to your `~/.vimrc` file
 
-``` vim
+```vim
 Plugin 'christoomey/vim-tmux-navigator'
 ```
 
@@ -47,12 +44,12 @@ Then run
 :PluginInstall
 ```
 
-If you are using Vim 8+, you don't need any plugin manager. Simply clone this repository inside `~/.vim/pack/plugin/start/` directory and restart Vim.
+If you are using Vim 8+, you don't need any plugin manager. Simply clone this
+repository inside `~/.vim/pack/plugin/start/` directory and restart Vim.
 
 ```
 git clone git@github.com:christoomey/vim-tmux-navigator.git ~/.vim/pack/plugins/start/vim-tmux-navigator
 ```
-
 
 ### tmux
 
@@ -62,7 +59,7 @@ To configure the tmux side of this customization there are two options:
 
 Add the following to your `~/.tmux.conf` file:
 
-``` tmux
+```tmux
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim="ps -o state=,tty=,comm= | grep -iqE '^[^TXZ ]+ +#{s|/dev/||:pane_tty}\s+(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
@@ -86,10 +83,10 @@ bind-key -T copy-mode-vi 'C-\' select-pane -l
 #### TPM
 
 If you'd prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
-copying the snippet.
-When using TPM, add the following lines to your ~/.tmux.conf:
+copying the snippet. When using TPM, add the following lines to your
+~/.tmux.conf:
 
-``` tmux
+```tmux
 set -g @plugin 'christoomey/vim-tmux-navigator'
 run '~/.tmux/plugins/tpm/tpm'
 ```
@@ -97,8 +94,7 @@ run '~/.tmux/plugins/tpm/tpm'
 Thanks to Christopher Sexton who provided the updated tmux configuration in
 [this blog post][].
 
-Configuration
--------------
+## Configuration
 
 ### Custom Key Bindings
 
@@ -111,7 +107,7 @@ match.
 
 Add the following to your `~/.vimrc` to define your custom maps:
 
-``` vim
+```vim
 let g:tmux_navigator_no_mappings = 1
 
 nnoremap <silent> {Left-Mapping} :TmuxNavigateLeft<cr>
@@ -121,9 +117,9 @@ nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
 nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 ```
 
-*Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
-in the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` =>
-Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
+_Note_ Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced in
+the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` => Left
+would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
 
 ##### Autosave on leave
 
@@ -132,10 +128,10 @@ navigating from Vim to tmux. This functionality is exposed via the
 `g:tmux_navigator_save_on_switch` variable, which can have either of the
 following values:
 
-Value  | Behavior
------- | ------
-1      | `:update` (write the current buffer, but only if changed)
-2      | `:wall` (write all buffers)
+| Value | Behavior                                                  |
+| ----- | --------------------------------------------------------- |
+| 1     | `:update` (write the current buffer, but only if changed) |
+| 2     | `:wall` (write all buffers)                               |
 
 To enable this, add the following (with the desired value) to your ~/.vimrc:
 
@@ -173,9 +169,10 @@ mapping.
 #### Restoring Clear Screen (C-l)
 
 The default key bindings include `<Ctrl-l>` which is the readline key binding
-for clearing the screen. The following binding can be added to your `~/.tmux.conf` file to provide an alternate mapping to `clear-screen`.
+for clearing the screen. The following binding can be added to your
+`~/.tmux.conf` file to provide an alternate mapping to `clear-screen`.
 
-``` tmux
+```tmux
 bind C-l send-keys 'C-l'
 ```
 
@@ -184,14 +181,15 @@ With this enabled you can use `<prefix> C-l` to clear the screen.
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
 #### Nesting
+
 If you like to nest your tmux sessions, this plugin is not going to work
 properly. It probably never will, as it would require detecting when Tmux would
 wrap from one outermost pane to another and propagating that to the outer
 session.
 
-By default this plugin works on the outermost tmux session and the vim
-sessions it contains, but you can customize the behaviour by adding more
-commands to the expression used by the grep command.
+By default this plugin works on the outermost tmux session and the vim sessions
+it contains, but you can customize the behaviour by adding more commands to the
+expression used by the grep command.
 
 When nesting tmux sessions via ssh or mosh, you could extend it to look like
 `'(^|\/)g?(view|vim|ssh|mosh?)(diff)?$'`, which makes this plugin work within
@@ -205,7 +203,7 @@ This behaviour means that you can't leave the innermost session with Ctrl-hjkl
 directly. These following fallback mappings can be targeted to the right Tmux
 session by escaping the prefix (Tmux' `send-prefix` command).
 
-``` tmux
+```tmux
 bind -r C-h run "tmux select-pane -L"
 bind -r C-j run "tmux select-pane -D"
 bind -r C-k run "tmux select-pane -U"
@@ -213,20 +211,19 @@ bind -r C-l run "tmux select-pane -R"
 bind -r C-\ run "tmux select-pane -l"
 ```
 
-Troubleshooting
----------------
+## Troubleshooting
 
 ### Vim -> Tmux doesn't work!
 
 This is likely due to conflicting key mappings in your `~/.vimrc`. You can use
 the following search pattern to find conflicting mappings
-`\vn(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or
-altered to avoid conflicting with the mappings from the plugin.
+`\vn(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or altered
+to avoid conflicting with the mappings from the plugin.
 
-Another option is that the pattern matching included in the `.tmux.conf` is
-not recognizing that Vim is active. To check that tmux is properly recognizing
-Vim, use the provided Vim command `:TmuxNavigatorProcessList`. The output of
-that command should be a list like:
+Another option is that the pattern matching included in the `.tmux.conf` is not
+recognizing that Vim is active. To check that tmux is properly recognizing Vim,
+use the provided Vim command `:TmuxNavigatorProcessList`. The output of that
+command should be a list like:
 
 ```
 Ss   -zsh
@@ -244,14 +241,14 @@ about your OS, Vim version, and tmux version as possible.
 This functionality requires tmux version 1.8 or higher. You can check your
 version to confirm with this shell command:
 
-``` bash
+```bash
 tmux -V # should return 'tmux 1.8'
 ```
 
 ### Switching out of Vim Is Slow
 
-If you find that navigation within Vim (from split to split) is fine, but Vim
-to a non-Vim tmux pane is delayed, it might be due to a slow shell startup.
+If you find that navigation within Vim (from split to split) is fine, but Vim to
+a non-Vim tmux pane is delayed, it might be due to a slow shell startup.
 Consider moving code from your shell's non-interactive rc file (e.g.,
 `~/.zshenv`) into the interactive startup file (e.g., `~/.zshrc`) as Vim only
 sources the non-interactive config.
@@ -260,16 +257,17 @@ sources the non-interactive config.
 
 Terminal mode is currently unsupported as adding this plugin's mappings there
 causes conflict with movement mappings for FZF (it also uses terminal mode).
-There's a conversation about this in https://github.com/christoomey/vim-tmux-navigator/pull/172
+There's a conversation about this in
+https://github.com/christoomey/vim-tmux-navigator/pull/172
 
 ### It Doesn't Work in tmate
 
 [tmate][] is a tmux fork that aids in setting up remote pair programming
 sessions. It is designed to run alongside tmux without issue, but occasionally
 there are hiccups. Specifically, if the versions of tmux and tmate don't match,
-you can have issues. See [this
-issue](https://github.com/christoomey/vim-tmux-navigator/issues/27) for more
-detail.
+you can have issues. See
+[this issue](https://github.com/christoomey/vim-tmux-navigator/issues/27) for
+more detail.
 
 [tmate]: http://tmate.io/
 
@@ -280,13 +278,15 @@ the current pane is running Vim. If you run into any issues with the navigation
 not happening as expected, you can try using [Mislav's original external
 script][] which has a more robust check.
 
-[Brian Hogan]: https://twitter.com/bphogan
-[Mislav Marohnić's]: http://mislav.uniqpath.com/
-[Mislav's original external script]: https://github.com/mislav/dotfiles/blob/master/bin/tmux-vim-select-pane
-[Vundle]: https://github.com/gmarik/vundle
-[TPM]: https://github.com/tmux-plugins/tpm
+[brian hogan]: https://twitter.com/bphogan
+[mislav marohnić's]: http://mislav.uniqpath.com/
+[mislav's original external script]:
+  https://github.com/mislav/dotfiles/blob/master/bin/tmux-vim-select-pane
+[vundle]: https://github.com/gmarik/vundle
+[tpm]: https://github.com/tmux-plugins/tpm
 [configuration section below]: #custom-key-bindings
-[this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
+[this blog post]:
+  http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
 [this gist]: https://gist.github.com/mislav/5189704
 
 ### Using The Plugin Freezes My Terminal
@@ -296,8 +296,9 @@ bindings to navigate panes would cause their terminal to freeze for 30+ seconds.
 Thankfully @kidonchu was able to figure out a new version of the vim detection
 script which also seems to be backwards compatible.
 
-See [this issue](https://github.com/christoomey/vim-tmux-navigator/issues/299) for more
-detail, but if you recent upgraded your tmux version and ran into the freezing
-issue, you'll want to update to [the new `is_vim` snippet][].
+See [this issue](https://github.com/christoomey/vim-tmux-navigator/issues/299)
+for more detail, but if you recent upgraded your tmux version and ran into the
+freezing issue, you'll want to update to [the new `is_vim` snippet][].
 
-[the new `is_vim` snippet]: https://github.com/christoomey/vim-tmux-navigator#add-a-snippet
+[the new `is_vim` snippet]:
+  https://github.com/christoomey/vim-tmux-navigator#add-a-snippet
