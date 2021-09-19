@@ -163,6 +163,15 @@ To disable navigation when zoomed, add the following to your ~/.vimrc:
 let g:tmux_navigator_disable_when_zoomed = 1
 ```
 
+#### Do not override C-\
+
+If you don't want to override the C-\ key (since that's normally mapped to the
+`SIGQUIT`) signal you can set the following in your `~/.tmux.conf` file:
+
+```tmux
+set -g @tmux_navigator_bind_backslash 'false'
+```
+
 #### Tmux
 
 Alter each of the five lines of the tmux configuration listed above to use your

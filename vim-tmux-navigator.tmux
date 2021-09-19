@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+get_tmux_option() {
+  local option=$1
+  local default_value=$2
+  local option_value=$(tmux show-option -gqv "$option")
+  if [ -z $option_value ]; then
+    echo $default_value
+  else
+    echo $option_value
+  fi
+}
+
 version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
 
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
@@ -13,13 +24,15 @@ tmux setenv -g tmux_version "$tmux_version"
 
 #echo "{'version' : '${tmux_version}', 'sed_pat' : '${version_pat}' }" > ~/.tmux_version.json
 
-tmux if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-  "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
-tmux if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-  "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
-
 tmux bind-key -T copy-mode-vi C-h select-pane -L
 tmux bind-key -T copy-mode-vi C-j select-pane -D
 tmux bind-key -T copy-mode-vi C-k select-pane -U
 tmux bind-key -T copy-mode-vi C-l select-pane -R
-tmux bind-key -T copy-mode-vi C-\\ select-pane -l
+readonly bind_backslash="$(get_tmux_option "@tmux_navigator_bind_backslash" "true")"
+if [[ "$bind_backslash" == "true" ]]; then
+  tmux if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+  tmux if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+  tmux bind-key -T copy-mode-vi C-\\ select-pane -l
+fi
