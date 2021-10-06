@@ -24,7 +24,7 @@ CONFIGURATION                             *tmux-navigator-configuration*
 * Disable vim->tmux navigation when the Vim pane is zoomed in tmux
  let g:tmux_navigator_disable_when_zoomed = 1
 
-* If the Vim pane is zoomed, keep zoom on when moving to another tmux pane
+* If the Vim pane is zoomed, stay zoomed when moving to another tmux pane
  let g:tmux_navigator_preserve_zoom = 1
 
 * Custom Key Bindings

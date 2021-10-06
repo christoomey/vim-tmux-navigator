@@ -168,7 +168,7 @@ let g:tmux_navigator_disable_when_zoomed = 1
 As noted above, navigating from a Vim pane to another tmux pane normally causes
 the window to be unzoomed. Some users may prefer the behavior of tmux's `-Z`
 option to `select-pane`, which keeps the window zoomed if it was zoomed. To
-enable this behavior, the `g:tmux_navigator_preserve_zoom` can be set to `1`:
+enable this behavior, set the `g:tmux_navigator_preserve_zoom` option to `1`:
 
 ```vim
 " If the tmux window is zoomed, keep it zoomed when moving from Vim to another pane
