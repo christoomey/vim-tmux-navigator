@@ -46,6 +46,10 @@ if !exists("g:tmux_navigator_disable_when_zoomed")
   let g:tmux_navigator_disable_when_zoomed = 0
 endif
 
+if !exists("g:tmux_navigator_preserve_zoom")
+  let g:tmux_navigator_preserve_zoom = 0
+endif
+
 function! s:TmuxOrTmateExecutable()
   return (match($TMUX, 'tmate') != -1 ? 'tmate' : 'tmux')
 endfunction
@@ -113,6 +117,9 @@ function! s:TmuxAwareNavigate(direction)
       endtry
     endif
     let args = 'select-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
+    if g:tmux_navigator_preserve_zoom == 1
+      let l:args .= ' -Z'
+    endif
     silent call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
       redraw!
