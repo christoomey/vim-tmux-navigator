@@ -17,19 +17,14 @@ endfunction
 
 if !get(g:, 'tmux_navigator_no_mappings', 0)
   if has('nvim')
-    " Neovim should run its default <C-l> binding first
-    nnoremap <silent> <C-l> <Cmd>nohlsearch<Bar>diffupdate<Bar>TmuxNavigateRight<cr>
-    nnoremap <silent> <C-h> <Cmd>nohlsearch<Bar>diffupdate<Bar>TmuxNavigateLeft<cr>
-    nnoremap <silent> <C-j> <Cmd>nohlsearch<Bar>diffupdate<Bar>TmuxNavigateDown<cr>
-    nnoremap <silent> <C-k> <Cmd>nohlsearch<Bar>diffupdate<Bar>TmuxNavigateUp<cr>
-    nnoremap <silent> <C-\> <Cmd>nohlsearch<Bar>diffupdate<Bar>TmuxNavigatePrevious<cr>
+    nnoremap <silent> <c-l> :nohlsearch<Bar>diffupdate<Bar>TmuxNavigateRight<cr>
   else
+    nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+  endif
     nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
     nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
     nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-    nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
     nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
-  endif
 endif
 
 if empty($TMUX)
