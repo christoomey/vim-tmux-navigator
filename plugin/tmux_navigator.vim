@@ -15,12 +15,29 @@ function! s:VimNavigate(direction)
   endtry
 endfunction
 
+" Emulate tmux pane-resizing behavior
+function! s:VimResize(direction)
+  let sep_direction = tr(a:direction, 'hjkl', 'ljjl')
+  let plus_minus = tr(a:direction, 'hjkl', '-+-+')
+  if winnr() == winnr(directionLimit)
+    let plus_minus = plus_minus == '+' ? '-' : '+'
+  end
+  let vertical = tr(a:direction, 'hjkl', '1001')
+  let vimCmd = (vertical ? 'vertical ' : '') . 'resize' . plus_minus . "5"
+  exec vimCmd
+endfunction
+
 if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
   nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
   nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+
+  nnoremap <silent> h :TmuxResizeLeft<cr>
+  nnoremap <silent> j :TmuxResizeDown<cr>
+  nnoremap <silent> k :TmuxResizeUp<cr>
+  nnoremap <silent> l :TmuxResizeRight<cr>
 endif
 
 if empty($TMUX)
@@ -29,6 +46,11 @@ if empty($TMUX)
   command! TmuxNavigateUp call s:VimNavigate('k')
   command! TmuxNavigateRight call s:VimNavigate('l')
   command! TmuxNavigatePrevious call s:VimNavigate('p')
+
+  command! TmuxResizeLeft call s:VimResize('h')
+  command! TmuxResizeDown call s:VimResize('j')
+  command! TmuxResizeUp call s:VimResize('k')
+  command! TmuxResizeRight call s:VimResize('l')
   finish
 endif
 
@@ -37,6 +59,11 @@ command! TmuxNavigateDown call s:TmuxAwareNavigate('j')
 command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
 command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
 command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
+
+command! TmuxResizeLeft call s:TmuxAwareResize('h')
+command! TmuxResizeDown call s:TmuxAwareResize('j')
+command! TmuxResizeUp call s:TmuxAwareResize('k')
+command! TmuxResizeRight call s:TmuxAwareResize('l')
 
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
@@ -128,4 +155,8 @@ function! s:TmuxAwareNavigate(direction)
   else
     let s:tmux_is_last_pane = 0
   endif
+endfunction
+
+function! s:TmuxAwareResize(direction)
+  call s:VimResize(a:direction)
 endfunction
