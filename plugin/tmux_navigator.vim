@@ -1,6 +1,8 @@
 " Maps <C-h/j/k/l> to switch vim splits in the given direction. If there are
 " no more windows in that direction, forwards the operation to tmux.
 " Additionally, <C-\> toggles between last active vim splits/tmux panes.
+" You can also use <M-h/j/k/l> to resize both tmux panes and vim splits as if
+" they weren the same thing
 
 if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
   finish
@@ -178,6 +180,61 @@ function! s:VimHasNeighbour(direction)
   endwhile
 endfunction
 
+function! s:TmuxHasNeighbour(direction)
+  let tmux_direction = get({'h':'left', 'j':'bottom', 'k':'up', 'l':'right'}, a:direction)
+  return !s:TmuxCommand("display-message -p '#{pane_at_" . tmux_direction . "}'")
+endfunction
+
+function! s:ShouldForwardResizeBackToTmux(direction)
+  if g:tmux_navigator_disable_when_zoomed && s:TmuxVimPaneIsZoomed()
+    return 0
+  endif
+  if tabpagewinnr(tabpagenr(), '$') == 1
+    return 1
+  endif
+  let xy_axis=tr(a:direction, 'hjkl', 'ljjl')
+  " case: there are no more vim neighboring windows, and there is still at
+  " least one tmux pane in the direction of the separator that can be shrunk
+  if !s:VimHasNeighbour(xy_axis) && s:TmuxHasNeighbour(xy_axis)
+    return 1
+  endif
+  return 0
+endfunction
+
+" Returns an array with all windows' win_screenpos
+function! s:VimLayout()
+  let layout = []
+  let win_nr = winnr('$')
+  while win_nr > 0
+    call add(layout, win_screenpos(win_nr))
+    let win_nr = win_nr - 1
+  endwhile
+  return layout
+endfunction
+
 function! s:TmuxAwareResize(direction)
-  call s:VimResize(a:direction)
+  if s:ShouldForwardResizeBackToTmux(a:direction)
+    let args = 'resize-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'hjkl', 'LDUR')
+    silent call s:TmuxCommand(args)
+  else
+	let l:layout_before = s:VimLayout()
+    call s:VimResize(a:direction)
+	let l:layout_after = s:VimLayout()
+	if l:layout_before == l:layout_after
+      let tmux_sep_direction=tr(a:direction, 'hjkl', 'ljjl')
+      if !s:TmuxHasNeighbour(tmux_sep_direction)
+        let tmux_sep_direction = tr(tmux_sep_direction, 'jl', 'kh')
+      endif
+	  " If we are moving away from the separator, we should resize the
+	  " previous pane along the axes
+	  let tmux_direction_previous = get({'h':'left', 'j':'up', 'k':'up', 'l':'left'}, tmux_sep_direction)
+	  let tmux_pane_to_resize = (tmux_sep_direction == a:direction) ? shellescape($TMUX_PANE) : "{" . tmux_direction_previous . "-of}"
+	  let tmux_resize_direction = (tmux_sep_direction == a:direction) ? tr(a:direction, 'hjkl', 'LDUR') : tr(a:direction, 'hjkl', 'LUUL')
+      let args = 'resize-pane -t ' . tmux_pane_to_resize . ' -' . tmux_resize_direction
+      silent call s:TmuxCommand(args)
+    endif
+  endif
+  if s:NeedsVitalityRedraw()
+    redraw!
+  endif
 endfunction
