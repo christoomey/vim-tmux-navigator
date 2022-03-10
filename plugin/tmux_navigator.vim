@@ -21,6 +21,11 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+  tnoremap <silent> <c-h> <Cmd>TmuxNavigateLeft<cr>
+  tnoremap <silent> <c-j> <Cmd>TmuxNavigateDown<cr>
+  tnoremap <silent> <c-k> <Cmd>TmuxNavigateUp<cr>
+  tnoremap <silent> <c-l> <Cmd>TmuxNavigateRight<cr>
+  tnoremap <silent> <c-\> <Cmd>TmuxNavigatePrevious<cr>
 endif
 
 if empty($TMUX)
