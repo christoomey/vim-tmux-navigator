@@ -19,7 +19,7 @@ endfunction
 function! s:VimResize(direction)
   let sep_direction = tr(a:direction, 'hjkl', 'ljjl')
   let plus_minus = tr(a:direction, 'hjkl', '-+-+')
-  if winnr() == winnr(directionLimit)
+  if !s:VimHasNeighbour(sep_direction)
     let plus_minus = plus_minus == '+' ? '-' : '+'
   end
   let vertical = tr(a:direction, 'hjkl', '1001')
@@ -155,6 +155,27 @@ function! s:TmuxAwareNavigate(direction)
   else
     let s:tmux_is_last_pane = 0
   endif
+endfunction
+
+" equivalent to 'winnr() == winnr(direction)' for vim < 8.1
+function! s:VimHasNeighbour(direction)
+  let current_position = win_screenpos(winnr())
+  if a:direction == 'k'
+    " Account for potential bufferline
+    return current_position[0] > 2
+  elseif a:direction == 'h'
+    return current_position[1] != 1
+  endif
+  let win_nr = winnr('$')
+  while win_nr > 0
+    let position = win_screenpos(win_nr)
+    let win_nr = win_nr - 1
+    if a:direction == 'l' && (current_position[1] + winwidth(0)) < position[1]
+      return 1
+    elseif a:direction == 'j' && (current_position[0] + winheight(0)) < position[0]
+      return 1
+    endif
+  endwhile
 endfunction
 
 function! s:TmuxAwareResize(direction)
