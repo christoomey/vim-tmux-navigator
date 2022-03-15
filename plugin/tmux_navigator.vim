@@ -79,6 +79,10 @@ if !exists("g:tmux_navigator_preserve_zoom")
   let g:tmux_navigator_preserve_zoom = 0
 endif
 
+if !exists("g:tmux_navigator_resize_step")
+  let g:tmux_navigator_resize_step = 1
+endif
+
 function! s:TmuxOrTmateExecutable()
   return (match($TMUX, 'tmate') != -1 ? 'tmate' : 'tmux')
 endfunction
@@ -214,7 +218,7 @@ endfunction
 
 function! s:TmuxAwareResize(direction)
   if s:ShouldForwardResizeBackToTmux(a:direction)
-    let args = 'resize-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'hjkl', 'LDUR')
+    let args = 'resize-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'hjkl', 'LDUR') . " " . g:tmux_navigator_resize_step
     silent call s:TmuxCommand(args)
   else
 	let l:layout_before = s:VimLayout()
@@ -230,7 +234,7 @@ function! s:TmuxAwareResize(direction)
 	  let tmux_direction_previous = get({'h':'left', 'j':'up', 'k':'up', 'l':'left'}, tmux_sep_direction)
 	  let tmux_pane_to_resize = (tmux_sep_direction == a:direction) ? shellescape($TMUX_PANE) : "{" . tmux_direction_previous . "-of}"
 	  let tmux_resize_direction = (tmux_sep_direction == a:direction) ? tr(a:direction, 'hjkl', 'LDUR') : tr(a:direction, 'hjkl', 'LUUL')
-      let args = 'resize-pane -t ' . tmux_pane_to_resize . ' -' . tmux_resize_direction
+      let args = 'resize-pane -t ' . tmux_pane_to_resize . ' -' . tmux_resize_direction . " " . g:tmux_navigator_resize_step
       silent call s:TmuxCommand(args)
     endif
   endif
