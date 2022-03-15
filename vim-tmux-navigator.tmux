@@ -8,6 +8,10 @@ tmux bind-key -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
 tmux bind-key -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
 tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
 tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
+tmux bind-key -n M-h if-shell "$is_vim" 'send-keys M-h' 'resize-pane -L'
+tmux bind-key -n M-j if-shell "$is_vim" 'send-keys M-h' 'resize-pane -D'
+tmux bind-key -n M-k if-shell "$is_vim" 'send-keys M-h' 'resize-pane -U'
+tmux bind-key -n M-l if-shell "$is_vim" 'send-keys M-h' 'resize-pane -R'
 tmux_version="$(tmux -V | sed -En "$version_pat")"
 tmux setenv -g tmux_version "$tmux_version"
 
