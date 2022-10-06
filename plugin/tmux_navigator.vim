@@ -2,6 +2,22 @@
 " no more windows in that direction, forwards the operation to tmux.
 " Additionally, <C-\> toggles between last active vim splits/tmux panes.
 
+" i am not sure about this one, but the below commented snipped is sufficient.
+" vim-tmux-navigator
+" function! TmuxMove(direction)
+"     let wnr = winnr()
+"     silent! execute 'wincmd ' . a:direction
+"     " if the winnr is still the same after we moved, it is the last pane.
+"     if wnr == winnr()
+"         call system('tmux select-pane -' . tr(a:direction, 'phjkl', 'lLDUR'))
+"     end
+" endfunction
+" 
+" nnoremap <silent> <c-h> :call TmuxMove('h')<cr>
+" nnoremap <silent> <c-j> :call TmuxMove('j')<cr>
+" nnoremap <silent> <c-k> :call TmuxMove('k')<cr>
+" nnoremap <silent> <c-l> :call TmuxMove('l')<cr>
+
 if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
   finish
 endif
