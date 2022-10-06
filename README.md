@@ -66,7 +66,7 @@ Add the following to your `~/.tmux.conf` file:
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 
-# pseudo substring match by substituting the current command from the current commmand string
+# pseudo substring match by substituting "g?(view|n?vim?x?)(diff)?$" from the current commmand string
 bind-key -n C-k if-shell "[ '#{pane_current_command}' != '#{s/g?(view|n?vim?x?)(diff)?$//:#{pane_current_command}}' ]" "send-keys C-k" "select-pane -U"
 bind-key -n C-j if-shell "[ '#{pane_current_command}' != '#{s/g?(view|n?vim?x?)(diff)?$//:#{pane_current_command}}' ]" "send-keys C-j" "select-pane -D"
 bind-key -n C-h if-shell "[ '#{pane_current_command}' != '#{s/g?(view|n?vim?x?)(diff)?$//:#{pane_current_command}}' ]" "send-keys C-h" "select-pane -L"

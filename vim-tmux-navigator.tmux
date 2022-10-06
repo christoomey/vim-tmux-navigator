@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# pseudo substring match by substituting the current command from the current commmand string
+# pseudo substring match by substituting "g?(view|n?vim?x?)(diff)?$" from the current commmand string
 tmux bind-key -n C-k if-shell "[ '#{pane_current_command}' != '#{s/g?(view|n?vim?x?)(diff)?$//:#{pane_current_command}}' ]" "send-keys C-k" "select-pane -U"
 tmux bind-key -n C-j if-shell "[ '#{pane_current_command}' != '#{s/g?(view|n?vim?x?)(diff)?$//:#{pane_current_command}}' ]" "send-keys C-j" "select-pane -D"
 tmux bind-key -n C-h if-shell "[ '#{pane_current_command}' != '#{s/g?(view|n?vim?x?)(diff)?$//:#{pane_current_command}}' ]" "send-keys C-h" "select-pane -L"
