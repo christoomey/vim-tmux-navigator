@@ -30,10 +30,10 @@ CONFIGURATION                             *tmux-navigator-configuration*
 * Custom Key Bindings
  let g:tmux_navigator_no_mappings = 1
 
- nnoremap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
- nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
- nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
- nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
- nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+ noremap <silent> {Left-mapping} :<C-U>TmuxNavigateLeft<cr>
+ noremap <silent> {Down-Mapping} :<C-U>TmuxNavigateDown<cr>
+ noremap <silent> {Up-Mapping} :<C-U>TmuxNavigateUp<cr>
+ noremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
+ noremap <silent> {Previous-Mapping} :<C-U><C-U>TmuxNavigatePrevious<cr>
 
  vim:tw=78:ts=8:ft=help:norl:

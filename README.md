@@ -115,16 +115,16 @@ Add the following to your `~/.vimrc` to define your custom maps:
 ``` vim
 let g:tmux_navigator_no_mappings = 1
 
-nnoremap <silent> {Left-Mapping} :TmuxNavigateLeft<cr>
-nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
-nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
-nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
-nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+noremap <silent> {Left-Mapping} :<C-U>TmuxNavigateLeft<cr>
+noremap <silent> {Down-Mapping} :<C-U>TmuxNavigateDown<cr>
+noremap <silent> {Up-Mapping} :<C-U>TmuxNavigateUp<cr>
+noremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
+noremap <silent> {Previous-Mapping} :<C-U>TmuxNavigatePrevious<cr>
 ```
 
 *Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
 in the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` =>
-Left would be created with `nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>`.
+Left would be created with `noremap <silent> <c-h> :<C-U>TmuxNavigateLeft<cr>`.
 
 ##### Autosave on leave
 
@@ -263,7 +263,7 @@ Troubleshooting
 
 This is likely due to conflicting key mappings in your `~/.vimrc`. You can use
 the following search pattern to find conflicting mappings
-`\vn(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or
+`\v(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or
 altered to avoid conflicting with the mappings from the plugin.
 
 Another option is that the pattern matching included in the `.tmux.conf` is
