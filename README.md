@@ -199,6 +199,22 @@ With this enabled you can use `<prefix> C-l` to clear the screen.
 
 Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
 
+#### Restoring SIGQUIT (C-\\)
+
+The default key bindings also include `<Ctrl-\>` which is the default method of
+sending SIGQUIT to a foreground process. Similar to "Clear Screen" above, a key
+binding can be created to replicate SIGQUIT in the prefix table.
+
+``` tmux
+bind C-\\ send-keys 'C-\'
+```
+
+Alternatively, you can exclude the previous pane key binding from your `~/.tmux.conf`. If using TPM, the following line can be used to unbind the previous pane binding set by the plugin.
+
+``` tmux
+unbind -n C-\\
+```
+
 #### Disable Wrapping
 
 By default, if you tru to move past the edge of the screen, tmux/vim will
