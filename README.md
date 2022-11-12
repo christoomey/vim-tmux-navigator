@@ -332,6 +332,27 @@ detail.
 
 [tmate]: http://tmate.io/
 
+### Switching between host panes doesn't work when docker is running
+
+Replace the `is_vim` variable in your `~/.tmux.conf` file with:
+```tmux
+if-shell '[ -f /.dockerenv ]' \
+  "is_vim=\"ps -o state=,comm= -t '#{pane_tty}' \
+      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'\""
+  # Filter out docker instances of nvim from the host system to prevent
+  # host from thinking nvim is running in a pseudoterminal when its not.
+  "is_vim=\"ps -o state=,comm=,cgroup= -t '#{pane_tty}' \
+      | grep -ivE '^.+ +.+ +.+\\/docker\\/.+$' \
+      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)? +'\""
+```
+
+Details: The output of the ps command on the host system includes processes
+running within containers, but containers have their own instances of
+/dev/pts/\*. vim-tmux-navigator relies on /dev/pts/\* to determine if vim is
+running, so if vim is running in say /dev/pts/<N> in a container and there is a
+tmux pane (not running vim) in /dev/pts/<N> on the host system, then without
+the patch above vim-tmux-navigator will think vim is running when its not.
+
 ### It Still Doesn't Work!!!
 
 The tmux configuration uses an inlined grep pattern match to help determine if
