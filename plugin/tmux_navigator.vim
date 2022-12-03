@@ -16,11 +16,11 @@ function! s:VimNavigate(direction)
 endfunction
 
 if !get(g:, 'tmux_navigator_no_mappings', 0)
-  noremap <silent> <c-h> :<C-U>TmuxNavigateLeft<cr>
-  noremap <silent> <c-j> :<C-U>TmuxNavigateDown<cr>
-  noremap <silent> <c-k> :<C-U>TmuxNavigateUp<cr>
-  noremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
-  noremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
+  noremap <silent> <c-h> <Cmd>TmuxNavigateLeft<cr>
+  noremap <silent> <c-j> <Cmd>TmuxNavigateDown<cr>
+  noremap <silent> <c-k> <Cmd>TmuxNavigateUp<cr>
+  noremap <silent> <c-l> <Cmd>TmuxNavigateRight<cr>
+  noremap <silent> <c-\> <Cmd>TmuxNavigatePrevious<cr>
 endif
 
 if empty($TMUX)
