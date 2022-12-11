@@ -11,13 +11,13 @@ GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 NORMAL=$(tput sgr0)
 
-vim_pattern='(^|\/)g?(view|n?vim?x?)(diff)?$'
+vim_pattern='(^|\/)g?(view|l?n?vim?x?)(diff)?$'
 match_tests=(vim Vim VIM vimdiff /usr/local/bin/vim vi gvim view gview nvim vimx)
 no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
 
 display_matches() {
   for process_name in "$@"; do
-    printf "%s %s\n" "$(matches_vim_pattern $process_name)" "$process_name"
+    printf "%s %s\n" "$(matches_vim_pattern "$process_name")" "$process_name"
   done
 }
 
