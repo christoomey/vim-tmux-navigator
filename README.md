@@ -334,6 +334,13 @@ detail.
 
 ### Switching between host panes doesn't work when docker is running
 
+Images built from minimalist OSes may not have the `ps` command or have a
+simpler version of the command that is not compatible with this plugin.
+Try installing the `procps` package using the appropriate package manager
+command. For Alpine, you would do `apk add procps`.
+
+If this doesn't solve your problem, you can also try the following:
+
 Replace the `is_vim` variable in your `~/.tmux.conf` file with:
 ```tmux
 if-shell '[ -f /.dockerenv ]' \
