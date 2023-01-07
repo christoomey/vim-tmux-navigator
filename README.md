@@ -272,6 +272,41 @@ bind -r C-l run "tmux select-pane -R"
 bind -r C-\ run "tmux select-pane -l"
 ```
 
+Another potential solution is to manually prevent the outermost
+tmux session from intercepting the navigation keystrokes by
+disabling the prefix table:
+
+```
+set -g pane-active-border-style 'fg=#000000,bg=#ffff00'
+bind -T root F12  \
+  set prefix None \;\     # optional; disables prefix key
+  set key-table off \;\
+  if -F '#{pane_in_mode}' 'send-keys -X cancel' \;\
+  set -g pane-active-border-style 'fg=#000000,bg=#00ff00'
+  refresh-client -S \;\
+
+bind -T off F12 \
+  set -u prefix \;\       # only needed if prefix key is disabled
+  set -u key-table \;\
+  set -g pane-active-border-style 'fg=#000000,bg=#ffff00'
+  refresh-client -S
+```
+
+This code, added to the machine running the outermost tmux
+session, toggles the outermost prefix table on and off with the
+`F12` key. When off, the active pane's border changes to green to
+indicate that the inner session receives navigation keystrokes.
+When toggled back on, the border returns to yellow and normal
+operation resumes and he outermost with respond to the nav
+keystrokes.
+
+The code example above also toggles the prefix key (ctrl-b by default)
+for the outer session so that same prefix can be temporarily used
+on the inner session instead of having to use a different
+prefix (ctrl-a by default) which you may find convenient. But if this
+is not to your liking, just remove the lines indicated as optional.
+
+
 Troubleshooting
 ---------------
 
