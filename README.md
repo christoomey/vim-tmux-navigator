@@ -270,9 +270,6 @@ bind -r C-l run "tmux select-pane -R"
 bind -r C-\ run "tmux select-pane -l"
 ```
 
-
-## Troubleshooting
-
 Another potential solution is to manually prevent the outermost
 tmux session from intercepting the navigation keystrokes by
 disabling the prefix table:
@@ -306,6 +303,8 @@ for the outer session so that same prefix can be temporarily used
 on the inner session instead of having to use a different
 prefix (ctrl-a by default) which you may find convenient. But if this
 is not to your liking, just remove the lines indicated as optional.
+
+## Troubleshooting
 
 ### Vim -> Tmux doesn't work!
 
