@@ -66,7 +66,7 @@ Add the following to your `~/.tmux.conf` file:
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
 bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
@@ -226,11 +226,12 @@ For vim, you only need to enable this option:
 let  g:tmux_navigator_no_wrap = 1
 ```
 
-Tmux doesn't haave an option, so whatever key bindings you have need to be set
+Tmux doesn't have an option, so whatever key bindings you have need to be set
 to conditionally wrap based on position on screen:
+
 ```tmux
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" { send-keys C-h } { if-shell -F '#{pane_at_left}'   {} { select-pane -L } }
 bind-key -n 'C-j' if-shell "$is_vim" { send-keys C-j } { if-shell -F '#{pane_at_bottom}' {} { select-pane -D } }
 bind-key -n 'C-k' if-shell "$is_vim" { send-keys C-k } { if-shell -F '#{pane_at_top}'    {} { select-pane -U } }
@@ -380,12 +381,12 @@ Replace the `is_vim` variable in your `~/.tmux.conf` file with:
 ```tmux
 if-shell '[ -f /.dockerenv ]' \
   "is_vim=\"ps -o state=,comm= -t '#{pane_tty}' \
-      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'\""
+      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'\""
   # Filter out docker instances of nvim from the host system to prevent
   # host from thinking nvim is running in a pseudoterminal when its not.
   "is_vim=\"ps -o state=,comm=,cgroup= -t '#{pane_tty}' \
       | grep -ivE '^.+ +.+ +.+\\/docker\\/.+$' \
-      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)? +'\""
+      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)? +'\""
 ```
 
 Details: The output of the ps command on the host system includes processes
