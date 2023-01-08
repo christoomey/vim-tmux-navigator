@@ -273,7 +273,25 @@ bind -r C-l run "tmux select-pane -R"
 bind -r C-\ run "tmux select-pane -l"
 ```
 
-Another potential solution is to manually prevent the outermost
+Another workaround is to configure tmux on the outer machine to send keys to
+the inner tmux session:
+
+```
+bind-key -n 'M-h' 'send-keys c-h'
+bind-key -n 'M-j' 'send-keys c-j'
+bind-key -n 'M-k' 'send-keys c-k'
+bind-key -n 'M-l' 'send-keys c-l'
+```
+
+Here we bind "meta" key (aka "alt" or "option" key) combinations for each of
+the four directions and send those along to the innermost session via
+`send-keys`. You use the normal `C-h,j,k,l` while in the outermost session and
+the alternative bindings to navigate the innermost session. Note that if you
+use the example above on a Mac, you may need to configure your terminal app to
+get the option key to work like a normal meta key. Consult your terminal app's
+manual for details.
+
+A third possible solution is to manually prevent the outermost
 tmux session from intercepting the navigation keystrokes by
 disabling the prefix table:
 
