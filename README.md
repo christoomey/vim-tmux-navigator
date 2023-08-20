@@ -217,7 +217,7 @@ unbind -n C-\\
 
 #### Disable Wrapping
 
-By default, if you tru to move past the edge of the screen, tmux/vim will
+By default, if you try to move past the edge of the screen, tmux/vim will
 "wrap" around to the opposite side. To disable this, you'll need to
 configure both tmux and vim:
 
