@@ -66,7 +66,7 @@ Add the following to your `~/.tmux.conf` file:
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'"
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
 bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
@@ -186,6 +186,15 @@ mapping.
 
 ### Additional Customization
 
+#### Ignoring programs that use Ctrl+hjkl movement
+
+In interactive programs such as FZF, Ctrl+hjkl can be used instead of the arrow keys to move the selection up and down. If vim-tmux-navigator is getting in your way trying to change the active window instead, you can make it be ignored and work as if this plugin were not enabled. Just modify the `is_vim` variable(that you have either on the snipped you pasted on `~/.tmux.conf` or on the `vim-tmux-navigator.tmux` file). For example, to add the program `foobar`:
+
+```diff
+- is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
++ is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf|foobar)(diff)?$'"
+```
+
 #### Restoring Clear Screen (C-l)
 
 The default key bindings include `<Ctrl-l>` which is the readline key binding
@@ -231,7 +240,7 @@ to conditionally wrap based on position on screen:
 
 ```tmux
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'"
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" { send-keys C-h } { if-shell -F '#{pane_at_left}'   {} { select-pane -L } }
 bind-key -n 'C-j' if-shell "$is_vim" { send-keys C-j } { if-shell -F '#{pane_at_bottom}' {} { select-pane -D } }
 bind-key -n 'C-k' if-shell "$is_vim" { send-keys C-k } { if-shell -F '#{pane_at_top}'    {} { select-pane -U } }
