@@ -53,6 +53,31 @@ If you are using Vim 8+, you don't need any plugin manager. Simply clone this re
 git clone git@github.com:christoomey/vim-tmux-navigator.git ~/.vim/pack/plugins/start/vim-tmux-navigator
 ```
 
+### lazy.nvim
+
+If you are using [lazy.nvim](https://github.com/folke/lazy.nvim). Add the following plugin to your configuration.
+
+```lua
+{
+  "christoomey/vim-tmux-navigator",
+  cmd = {
+    "TmuxNavigateLeft",
+    "TmuxNavigateDown",
+    "TmuxNavigateUp",
+    "TmuxNavigateRight",
+    "TmuxNavigatePrevious",
+  },
+  keys = {
+    { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+    { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+    { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+    { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+    { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+  },
+}
+```
+
+Then, restart Neovim and lazy.nvim will automatically install the plugin and configure the keybindings.
 
 ### tmux
 
