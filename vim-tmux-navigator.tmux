@@ -25,7 +25,8 @@ bind_key_vim() {
       | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
-  tmux bind-key -T copy-mode-vi "$key" "$tmux_cmd"
+  # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
+  tmux bind-key -T copy-mode-vi "$key" $tmux_cmd
 }
 
 move_left="$(get_tmux_option "@vim_navigator_mapping_left" 'C-h')"
