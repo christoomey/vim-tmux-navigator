@@ -111,7 +111,7 @@ bind-key -T copy-mode-vi 'C-\' select-pane -l
 
 #### TPM
 
-If you'd prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
+If you prefer, you can use the Tmux Plugin Manager ([TPM][]) instead of
 copying the snippet.
 When using TPM, add the following lines to your ~/.tmux.conf:
 
@@ -119,7 +119,8 @@ When using TPM, add the following lines to your ~/.tmux.conf:
 set -g @plugin 'christoomey/vim-tmux-navigator'
 ```
 
-To set a different key-binding, use the plugin configuration settings (remember to update your vim config accordingly).
+To set a different key-binding, use the plugin configuration settings
+(remember to update your vim config accordingly).
 Multiple key bindings are possible, use a space to separate.
 
 ``` tmux
