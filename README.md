@@ -60,6 +60,7 @@ If you are using [lazy.nvim](https://github.com/folke/lazy.nvim). Add the follow
 ```lua
 {
   "christoomey/vim-tmux-navigator",
+  event = "Very Lazy",
   cmd = {
     "TmuxNavigateLeft",
     "TmuxNavigateDown",
