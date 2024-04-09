@@ -60,7 +60,8 @@ If you are using [lazy.nvim](https://github.com/folke/lazy.nvim). Add the follow
 ```lua
 {
   "christoomey/vim-tmux-navigator",
-  event = "VeryLazy",
+     -- Fixes a bug in lazy.nvim 10.20.3, uncomment if keybinds are unresponsive
+     -- event = "VeryLazy",
   cmd = {
     "TmuxNavigateLeft",
     "TmuxNavigateDown",
