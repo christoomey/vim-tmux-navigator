@@ -362,10 +362,11 @@ Troubleshooting
 
 ### Vim -> Tmux doesn't work!
 
-This is likely due to conflicting key mappings in your `~/.vimrc`. You can use
-the following search pattern to find conflicting mappings
-`\v(nore)?map\s+\<c-[hjkl]\>`. Any matching lines should be deleted or
-altered to avoid conflicting with the mappings from the plugin.
+This is likely due to conflicting key mappings in your `~/.vimrc`. You can check
+this by running `:verbose nmap <C-h>` (similar for each of the key bindings).
+You should see vim-tmux-runner as the source listed for the key binding, but if
+you see something else, you've got a conflict and will need to remove the other
+key binding or otherwise restructure your vim config.
 
 Another option is that the pattern matching included in the `.tmux.conf` is
 not recognizing that Vim is active. To check that tmux is properly recognizing
