@@ -74,10 +74,14 @@ If you are using [lazy.nvim](https://github.com/folke/lazy.nvim). Add the follow
     { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
     { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
   },
+  config = function()
+    vim.g.tmux_navigator_no_mappings = 1
+  end,
 }
 ```
 
 Then, restart Neovim and lazy.nvim will automatically install the plugin and configure the keybindings.
+To change the keymaps you only have to replace the corresponding keymaps.
 
 ### tmux
 
@@ -150,38 +154,6 @@ noremap <silent> {Previous-Mapping} :<C-U>TmuxNavigatePrevious<cr>
 *Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
 in the above code with the desired mapping. Ie, the mapping for `<ctrl-h>` =>
 Left would be created with `noremap <silent> <c-h> :<C-U>TmuxNavigateLeft<cr>`.
-
-#### lazy.nvim 
-
-To change your keymaps in lazy.nvim with lua change the configuration as following 
-
-```lua
-{
-  "christoomey/vim-tmux-navigator",
-  cmd = {
-    "TmuxNavigateLeft",
-    "TmuxNavigateDown",
-    "TmuxNavigateUp",
-    "TmuxNavigateRight",
-    "TmuxNavigatePrevious",
-  },
-  keys = {
-    { "{Left-Mapping}", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-    { "{Down-Mapping}", "<cmd><C-U>TmuxNavigateDown<cr>" },
-    { "{Up-Mapping}", "<cmd><C-U>TmuxNavigateUp<cr>" },
-    { "{Right-Mapping}", "<cmd><C-U>TmuxNavigateRight<cr>" },
-    { "{Previous-Mapping}", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-  },
-  config = function()
-    vim.g.tmux_navigator_no_mappings = 1
-  end,
-}
-```
-*Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
-in the above code with the desired mapping. The mapping for `<C-Left>` =>
-Left would be created by adding `{ "<C-Left>", "<cmd><C-U>TmuxNavigateLeft<cr>" }`.
-And adding the config function where you set the global variable. Last one is 
-important so the initial mappings aren't still active.
 
 ##### Autosave on leave
 
