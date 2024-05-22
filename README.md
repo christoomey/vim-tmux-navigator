@@ -203,6 +203,20 @@ let g:tmux_navigator_preserve_zoom = 1
 Naturally, if `g:tmux_navigator_disable_when_zoomed` is enabled, this option
 will have no effect.
 
+##### Netrw fix
+Netrw uses `<C-l>` to refresh the directory listing so this needs to be overridden for right navigation to work.
+
+Override in vim:
+
+```vim
+let g:Netrw_UserMaps = [["<C-l>","<C-U>TmuxNavigateRight<cr>"]]
+```
+
+Override in neovim:
+```lua
+vim.g.Netrw_UserMaps = { { "<C-l>", "<C-U>TmuxNavigateRight<cr>" } }
+```
+
 #### Tmux
 
 Alter each of the five lines of the tmux configuration listed above to use your
