@@ -356,6 +356,27 @@ instead of having to use a different prefix (ctrl-a by default) which you may
 find convenient. If not, simply remove the lines that set/unset the prefix key
 from the code example above.
 
+#### netrw
+
+Vim's builtin file explorer, named the netrw plugin, has a default keymapping
+for `<C-l>`. When using `vim-tmux-navigator` with default settings,
+`vim-tmux-navigator` will try to override the netrw mapping so that `<C-l>` will
+still be mapped to `:TmuxNavigateRight` as it is for other buffers. If you
+prefer to keep the netrw mapping, set this variable in your vimrc:
+
+``` vim
+let g:tmux_navigator_disable_netrw_workaround = 1
+```
+
+Alternatively, if you prefer to work around the issue yourself, you can add the
+following to your vimrc:
+
+``` vim
+let g:tmux_navigator_disable_netrw_workaround = 1
+" g:Netrw_UserMaps is a list of lists. If you'd like to add other key mappings,
+" just add them like so: [['a', 'command1'], ['b', 'command2'], ...]
+let g:Netrw_UserMaps = [['<C-l>', '<C-U>TmuxNavigateRight<cr>']]
+```
 
 Troubleshooting
 ---------------
