@@ -36,4 +36,7 @@ CONFIGURATION                             *tmux-navigator-configuration*
  nnoremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
  nnoremap <silent> {Previous-Mapping} :<C-U><C-U>TmuxNavigatePrevious<cr>
 
+* Disable the <C-l> remapping on netrw buffers (use netrw's mapping)
+ let g:tmux_navigator_disable_netrw_workaround = 1
+
  vim:tw=78:ts=8:ft=help:norl:
