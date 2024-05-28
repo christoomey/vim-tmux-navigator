@@ -1,25 +1,46 @@
 #!/usr/bin/env bash
 
-version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
+get_tmux_option() {
+  local option value default
+  option="$1"
+  default="$2"
+  value=$(tmux show-option -gqv "$option")
 
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
-tmux bind-key -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
-tmux bind-key -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
-tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
-tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
-tmux_version="$(tmux -V | sed -En "$version_pat")"
-tmux setenv -g tmux_version "$tmux_version"
+  if [ -n "$value" ]; then
+    if [ "$value" = "null" ]; then
+      echo ""
+    else
+      echo "$value"
+    fi
+  else
+    echo "$default"
+  fi
+}
 
-#echo "{'version' : '${tmux_version}', 'sed_pat' : '${version_pat}' }" > ~/.tmux_version.json
+bind_key_vim() {
+  local key tmux_cmd is_vim
+  key="$1"
+  tmux_cmd="$2"
+  is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+      | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
+  # sending C-/ according to https://github.com/tmux/tmux/issues/1827
+  tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
+  # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
+  tmux bind-key -T copy-mode-vi "$key" $tmux_cmd
+}
 
-tmux if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-  "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
-tmux if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-  "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+move_left="$(get_tmux_option "@vim_navigator_mapping_left" 'C-h')"
+move_right="$(get_tmux_option "@vim_navigator_mapping_right" 'C-l')"
+move_up="$(get_tmux_option "@vim_navigator_mapping_up" 'C-k')"
+move_down="$(get_tmux_option "@vim_navigator_mapping_down" 'C-j')"
+move_prev="$(get_tmux_option "@vim_navigator_mapping_prev" 'C-\')"
 
-tmux bind-key -T copy-mode-vi C-h select-pane -L
-tmux bind-key -T copy-mode-vi C-j select-pane -D
-tmux bind-key -T copy-mode-vi C-k select-pane -U
-tmux bind-key -T copy-mode-vi C-l select-pane -R
-tmux bind-key -T copy-mode-vi C-\\ select-pane -l
+for k in $(echo "$move_left");  do bind_key_vim "$k" "select-pane -L"; done
+for k in $(echo "$move_down");  do bind_key_vim "$k" "select-pane -D"; done
+for k in $(echo "$move_up");    do bind_key_vim "$k" "select-pane -U"; done
+for k in $(echo "$move_right"); do bind_key_vim "$k" "select-pane -R"; done
+for k in $(echo "$move_prev");  do bind_key_vim "$k" "select-pane -l"; done
+
+# Restoring clear screen
+tmux bind C-l send-keys 'C-l'
+
