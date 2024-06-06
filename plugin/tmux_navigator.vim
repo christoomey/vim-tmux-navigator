@@ -130,7 +130,7 @@ function! s:TmuxAwareNavigate(direction)
       catch /^Vim\%((\a\+)\)\=:E141/ " catches the no file name error
       endtry
     endif
-    let args = 'select-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
+    let args = 'select-pane -Zt ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
     if g:tmux_navigator_preserve_zoom == 1
       let l:args .= ' -Z'
     endif
