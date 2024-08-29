@@ -93,7 +93,7 @@ Add the following to your `~/.tmux.conf` file:
 version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
-nav_prefix='M'
+nav_prefix='C'
 
 bind-key -n "${nav_prefix}-h" if-shell "$is_vim" "send-keys ${nav_prefix}-h"  'select-pane -L'
 bind-key -n "${nav_prefix}-j" if-shell "$is_vim" "send-keys ${nav_prefix}-j"  'select-pane -D'
