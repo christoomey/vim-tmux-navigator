@@ -130,6 +130,14 @@ set -g @vim_navigator_mapping_up "C-k"
 set -g @vim_navigator_mapping_down "C-j"
 set -g @vim_navigator_mapping_prev ""  # removes the C-\ binding
 ```
+
+To disable the automatic mapping of `<prefix> C-l` to `send C-l` (which is
+intended to restore the "clear screen" functionality):
+
+```tmux
+set -g @vim_navigator_prefix_mapping_clear_screen ""
+```
+
 Don't forget to run tpm:
 
 ``` tmux
