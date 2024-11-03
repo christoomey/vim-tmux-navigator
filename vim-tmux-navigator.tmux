@@ -4,17 +4,15 @@ get_tmux_option() {
   local option value default
   option="$1"
   default="$2"
-  value=$(tmux show-option -gqv "$option")
+  value="$(tmux show-option -gv "$option" 2>/dev/null || echo "$default")"
 
-  if [ -n "$value" ]; then
-    if [ "$value" = "null" ]; then
+  # Deprecated, for backward compatibility
+  if [[ $value == 'null' ]]; then
       echo ""
-    else
-      echo "$value"
-    fi
-  else
-    echo "$default"
+      return
   fi
+
+  echo "$value"
 }
 
 bind_key_vim() {
