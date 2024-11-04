@@ -4,7 +4,13 @@ get_tmux_option() {
   local option value default
   option="$1"
   default="$2"
-  value="$(tmux show-option -gv "$option" 2>/dev/null || echo "$default")"
+  # NOTE: Older tmux versions (eg. 3.2a on Ubuntu 22.04) do not exit with an
+  #       error code when an option is not defined. Therefore we need to first
+  #       test if the option exists, and only then try to get its value or fall
+  #       back to the default.
+  value="$([[ -n $(tmux show-options -gq "$option") ]] \
+      && tmux show-option -gqv "$option" \
+      || echo "$default")"
 
   # Deprecated, for backward compatibility
   if [[ $value == 'null' ]]; then
