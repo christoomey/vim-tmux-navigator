@@ -142,6 +142,23 @@ intended to restore the "clear screen" functionality):
 set -g @vim_navigator_prefix_mapping_clear_screen ""
 ```
 
+You can also customize how tmux detects instances of `vim`. Override the
+following options:
+
+``` tmux
+# Change the regular expression used to detect vim. This pattern must be
+# compatible with `grep -iE` extended regular expression syntax.
+set -g @vim_navigator_pattern '(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
+
+# Override the shell script logic for detecting vim. Instances of
+# '@vim_navigator_pattern' will automatically be substituted with your override
+# of '@vim_navigator_pattern', or it will use the default @vim_navigator_pattern
+# if you haven't overridden the option.
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+  | grep -iqE '^[^TXZ ]+ +@vim_navigator_pattern$'"
+set -g @vim_navigator_check "${is_vim}"
+```
+
 Don't forget to run tpm:
 
 ``` tmux
@@ -248,6 +265,9 @@ In interactive programs such as FZF or the built-in Vim terminal, Ctrl+hjkl can 
 + vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf|foobar)(diff)?(-wrapped)?'
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +${vim_pattern}$'"
+
+# Or, use the plugin config option:
+set -g @vim_navigator_pattern '(\S+/)?g?\.?(view|l?n?vim?x?|fzf|foobar)(diff)?(-wrapped)?'
 ```
 
 #### Restoring Clear Screen (C-l)
@@ -323,6 +343,9 @@ When nesting tmux sessions via ssh or mosh, you could extend it to look like:
 ```diff
 - vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
 + vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf|ssh|mosh)(diff)?(-wrapped)?'
+
+# Or, use the plugin config option:
+set -g @vim_navigator_pattern '(\S+/)?g?\.?(view|l?n?vim?x?|fzf|ssh|mosh)(diff)?(-wrapped)?'
 ```
 
 This configuration makes this plugin work within the innermost tmux session and
@@ -415,6 +438,22 @@ let g:tmux_navigator_disable_netrw_workaround = 1
 let g:Netrw_UserMaps = [['<C-l>', '<C-U>TmuxNavigateRight<cr>']]
 ```
 
+#### Faster performance
+
+By default, this plugin relies on `ps -o state= -o comm= -t` to detect whether
+the current pane is running vim or not. If the `ps` command is slow, then you
+may be able to optimize the performance in common cases by customizing
+`@vim_navigator_check` like so:
+
+``` tmux
+is_vim="\
+echo '#{pane_current_command}' | grep -iqE '^@vim_navigator_pattern$' && exit 0
+echo '#{pane_current_command}' | grep -iqE '^(bash|zsh|fish)$' && exit 1
+ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +@vim_navigator_pattern$'"
+set -g @vim_navigator_check "${is_vim}"
+```
+
 Troubleshooting
 ---------------
 
@@ -494,6 +533,17 @@ if-shell '[ -f /.dockerenv ]' \
   "is_vim=\"ps -o state=,comm=,cgroup= -t '#{pane_tty}' \
       | grep -ivE '^.+ +.+ +.+\\/docker\\/.+$' \
       | grep -iqE '^[^TXZ ]+ +${vim_pattern}$'\""
+
+# Or, use the plugin config option:
+if-shell '[ -f /.dockerenv ]' \
+  "is_vim=\"ps -o state=,comm= -t '#{pane_tty}' \
+      | grep -iqE '^[^TXZ ]+ +@vim_navigator_pattern$'\""
+  # Filter out docker instances of nvim from the host system to prevent
+  # host from thinking nvim is running in a pseudoterminal when its not.
+  "is_vim=\"ps -o state=,comm=,cgroup= -t '#{pane_tty}' \
+      | grep -ivE '^.+ +.+ +.+\\/docker\\/.+$' \
+      | grep -iqE '^[^TXZ ]+ +@vim_navigator_pattern$'\""
+set -g @vim_navigator_check "${is_vim}"
 ```
 
 Details: The output of the ps command on the host system includes processes
