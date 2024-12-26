@@ -66,6 +66,7 @@ If you are using [lazy.nvim](https://github.com/folke/lazy.nvim). Add the follow
     "TmuxNavigateUp",
     "TmuxNavigateRight",
     "TmuxNavigatePrevious",
+    "TmuxNavigatorProcessList",
   },
   keys = {
     { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
