@@ -38,12 +38,14 @@ move_right="$(get_tmux_option "@vim_navigator_mapping_right" 'C-l')"
 move_up="$(get_tmux_option "@vim_navigator_mapping_up" 'C-k')"
 move_down="$(get_tmux_option "@vim_navigator_mapping_down" 'C-j')"
 move_prev="$(get_tmux_option "@vim_navigator_mapping_prev" 'C-\')"
+close="$(get_tmux_option "@vim_navigator_mapping_close" 'C-q')"
 
 for k in $(echo "$move_left");  do bind_key_vim "$k" "select-pane -L"; done
 for k in $(echo "$move_down");  do bind_key_vim "$k" "select-pane -D"; done
 for k in $(echo "$move_up");    do bind_key_vim "$k" "select-pane -U"; done
 for k in $(echo "$move_right"); do bind_key_vim "$k" "select-pane -R"; done
 for k in $(echo "$move_prev");  do bind_key_vim "$k" "select-pane -l"; done
+for k in $(echo "$close");      do bind_key_vim "$k" "kill-pane"; done
 
 # Restoring clear screen
 clear_screen="$(get_tmux_option "@vim_navigator_prefix_mapping_clear_screen" 'C-l')"

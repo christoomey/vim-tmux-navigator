@@ -21,6 +21,7 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-k> :<C-U>TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
+  nnoremap <silent> <c-q> :<C-U>TmuxNavigateClose<cr>
 
   if !get(g:, 'tmux_navigator_disable_netrw_workaround', 0)
     if !exists('g:Netrw_UserMaps')
@@ -37,6 +38,7 @@ if empty($TMUX)
   command! TmuxNavigateUp call s:VimNavigate('k')
   command! TmuxNavigateRight call s:VimNavigate('l')
   command! TmuxNavigatePrevious call s:VimNavigate('p')
+  command! TmuxNavigateClose call s:CloseCurrentBuffer()
   finish
 endif
 
@@ -45,6 +47,7 @@ command! TmuxNavigateDown call s:TmuxAwareNavigate('j')
 command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
 command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
 command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
+command! TmuxNavigateClose call s:CloseCurrentBufferOrTmuxPane()
 
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
@@ -145,4 +148,17 @@ function! s:TmuxAwareNavigate(direction)
   else
     let s:tmux_is_last_pane = 0
   endif
+endfunction
+
+function! s:CloseCurrentBufferOrTmuxPane()
+  if has('nvim')
+    call s:CloseCurrentBuffer()
+  else
+  silent call s:TmuxCommand('kill-pane'))
+  endif
+endfunction
+
+function! s:CloseCurrentBuffer()
+  " Close the current buffer in Neovim
+  execute 'bd'
 endfunction
