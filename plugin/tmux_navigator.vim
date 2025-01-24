@@ -159,6 +159,10 @@ function! s:CloseCurrentBufferOrTmuxPane()
 endfunction
 
 function! s:CloseCurrentBuffer()
-  " Close the current buffer in Neovim
-  execute 'bd'
+  " if empty(&filetype) && empty(getline(1, '$'))
+  if empty(&filetype)
+      quit
+  else
+      execute 'bd'
+  endif
 endfunction
