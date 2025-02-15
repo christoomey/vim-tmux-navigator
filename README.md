@@ -238,7 +238,7 @@ mapping.
 
 #### Ignoring programs that use Ctrl+hjkl movement
 
-In interactive programs such as FZF, Ctrl+hjkl can be used instead of the arrow keys to move the selection up and down. If vim-tmux-navigator is getting in your way trying to change the active window instead, you can make it be ignored and work as if this plugin were not enabled. Just modify the `is_vim` variable(that you have either on the snipped you pasted on `~/.tmux.conf` or on the `vim-tmux-navigator.tmux` file). For example, to add the program `foobar`:
+In interactive programs such as FZF or the built-in Vim terminal, Ctrl+hjkl can be used instead of the arrow keys to move the selection up and down. If vim-tmux-navigator is getting in your way trying to change the active window instead, you can make it be ignored and work as if this plugin were not enabled. Just modify the `is_vim` variable(that you have either on the snipped you pasted on `~/.tmux.conf` or on the `vim-tmux-navigator.tmux` file). For example, to add the program `foobar`:
 
 ```diff
 - is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
@@ -449,9 +449,7 @@ sources the non-interactive config.
 
 ### It doesn't work in Vim's `terminal` mode
 
-Terminal mode is currently unsupported as adding this plugin's mappings there
-causes conflict with movement mappings for FZF (it also uses terminal mode).
-There's a conversation about this in https://github.com/christoomey/vim-tmux-navigator/pull/172
+Terminal mode is now supported :)
 
 ### It Doesn't Work in tmate
 

@@ -21,6 +21,12 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-k> :<C-U>TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
+  
+
+  tnoremap <C-h> <C-w>:<C-U>TmuxNavigateLeft<cr>
+  tnoremap <C-j> <C-w>:<C-U>TmuxNavigateDown<cr>
+  tnoremap <C-k> <C-w>:<C-U>TmuxNavigateUp<cr>
+  tnoremap <C-l> <C-w>:<C-U>TmuxNavigateRight<cr>
 
   if !get(g:, 'tmux_navigator_disable_netrw_workaround', 0)
     if !exists('g:Netrw_UserMaps')
