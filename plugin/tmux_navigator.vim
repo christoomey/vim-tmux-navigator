@@ -1,5 +1,4 @@
-" Maps <C-h/j/k/l> to switch vim splits in the given direction. If there are
-" no more windows in that direction, forwards the operation to tmux.
+" Maps <C-h/j/k/l> to switch vim splits in the given direction. If there are no more windows in that direction, forwards the operation to tmux.
 " Additionally, <C-\> toggles between last active vim splits/tmux panes.
 
 if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
@@ -21,6 +20,12 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-k> :<C-U>TmuxNavigateUp<cr>
   nnoremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
   nnoremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
+  
+
+  tnoremap <expr> <silent> <C-h> IsFZF() ? "\<C-h>" : "\<C-w>:\<C-U> TmuxNavigateLeft\<cr>"
+  tnoremap <expr> <silent> <C-j> IsFZF() ? "\<C-j>" : "\<C-w>:\<C-U> TmuxNavigateDown\<cr>"
+  tnoremap <expr> <silent> <C-k> IsFZF() ? "\<C-k>" : "\<C-w>:\<C-U> TmuxNavigateUp\<cr>"
+  tnoremap <expr> <silent> <C-l> IsFZF() ? "\<C-l>" : "\<C-w>:\<C-U> TmuxNavigateRight\<cr>"
 
   if !get(g:, 'tmux_navigator_disable_netrw_workaround', 0)
     if !exists('g:Netrw_UserMaps')
@@ -106,6 +111,10 @@ function! s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge)
     return 0
   endif
   return a:tmux_last_pane || a:at_tab_page_edge
+endfunction
+
+function! IsFZF()
+  return &ft == 'fzf'
 endfunction
 
 function! s:TmuxAwareNavigate(direction)
