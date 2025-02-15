@@ -23,10 +23,10 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   nnoremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
   
 
-  tnoremap <C-h> <C-w>:<C-U>TmuxNavigateLeft<cr>
-  tnoremap <C-j> <C-w>:<C-U>TmuxNavigateDown<cr>
-  tnoremap <C-k> <C-w>:<C-U>TmuxNavigateUp<cr>
-  tnoremap <C-l> <C-w>:<C-U>TmuxNavigateRight<cr>
+  tnoremap <silent> <C-h> <C-w>:<C-U> TmuxNavigateLeft<cr>
+  tnoremap <silent> <C-j> <C-w>:<C-U> TmuxNavigateDown<cr>
+  tnoremap <silent> <C-k> <C-w>:<C-U> TmuxNavigateUp<cr>
+  tnoremap <silent> <C-l> <C-w>:<C-U> TmuxNavigateRight<cr>
 
   if !get(g:, 'tmux_navigator_disable_netrw_workaround', 0)
     if !exists('g:Netrw_UserMaps')
@@ -114,7 +114,14 @@ function! s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge)
   return a:tmux_last_pane || a:at_tab_page_edge
 endfunction
 
+function! IsFZF()
+  return &ft == 'fzf'
+endfunction
+
 function! s:TmuxAwareNavigate(direction)
+  if IsFZF()
+    return
+  endif
   let nr = winnr()
   let tmux_last_pane = (a:direction == 'p' && s:tmux_is_last_pane)
   if !tmux_last_pane
