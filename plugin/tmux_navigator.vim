@@ -144,7 +144,7 @@ function! s:TmuxAwareNavigate(direction)
     if g:tmux_navigator_preserve_zoom == 1
       let l:args .= ' -Z'
     endif
-    if g:tmux_navigator_no_wrap == 1
+    if g:tmux_navigator_no_wrap == 1 && a:direction != 'p'
       let args = 'if -F "#{pane_at_' . s:pane_position_from_direction[a:direction] . '}" "" "' . args . '"'
     endif
     silent call s:TmuxCommand(args)
