@@ -12,7 +12,7 @@ YELLOW=$(tput setaf 3)
 NORMAL=$(tput sgr0)
 
 
-vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
+vim_pattern="^[^TXZ ]+ +(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$"
 match_tests=(vim Vim VIM vimdiff lvim /usr/local/bin/vim vi gvim view gview nvim vimx fzf .vim-wrapped .nvim-wrapped)
 no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
 
@@ -23,7 +23,7 @@ display_matches() {
 }
 
 matches_vim_pattern() {
-  if echo "$1" | grep -iqE "$vim_pattern"; then
+  if echo "R $1" | grep -iqE "$vim_pattern"; then
     echo "${GREEN}match${NORMAL}"
   else
     echo "${RED}fail${NORMAL}"
