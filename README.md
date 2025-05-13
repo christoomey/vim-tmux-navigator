@@ -1,6 +1,8 @@
 Vim Tmux Navigator
 ==================
 
+[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/christoomey/vim-tmux-navigator/main.yml?style=flat-square&logo=github)](https://github.com/christoomey/vim-tmux-navigator/actions/workflows/main.yml)
+
 This plugin is a repackaging of [Mislav Marohnić's](https://mislav.net/) tmux-navigator
 configuration described in [this gist][]. When combined with a set of tmux
 key bindings, the plugin will allow you to navigate seamlessly between
