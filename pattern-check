@@ -37,7 +37,7 @@ no_match_tests=(
 )
 
 MATCH_RESULT="${GREEN}match${NORMAL}"
-NO_MATCH_RESULT="${RED}no match${NORMAL}"
+NO_MATCH_RESULT="${RED}not match${NORMAL}"
 
 display_matches() {
   local result
@@ -61,21 +61,21 @@ matches_vim_pattern() {
 }
 
 main() {
-  echo "Testing against pattern: ${YELLOW}$vim_pattern${NORMAL}\n"
+  echo -e "Testing against pattern: ${YELLOW}$vim_pattern${NORMAL}\n"
 
   local final_status=0
-  echo "These should all ${MATCH_RESULT}\n----------------------"
+  echo -e "These should all ${MATCH_RESULT}\n----------------------"
   local expect_result="${MATCH_RESULT}"
   display_matches "${match_tests[@]}" || final_status=1
 
-  echo "\nThese should all ${NO_MATCH_RESULT}\n---------------------"
+  echo -e "\nThese should all ${NO_MATCH_RESULT}\n--------------------------"
   expect_result="${NO_MATCH_RESULT}"
   display_matches "${no_match_tests[@]}" || final_status=1
 
   if [[ "${final_status}" == 0 ]]; then
-    echo "${GREEN}All test cases passed!${NORMAL}"
+    echo -e "\n${GREEN}All test cases passed!${NORMAL}"
   else
-    echo "${RED}Some test cases are failing${NORMAL}"
+    echo -e "\n${RED}Some test cases are failing${NORMAL}"
   fi
   return "${final_status}"
 }
