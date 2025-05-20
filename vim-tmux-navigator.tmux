@@ -22,7 +22,7 @@ get_tmux_option() {
 }
 
 # Export 'vim_pattern' so that it can be tested in pattern-check
-declare vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
+declare vim_pattern='(\\S+/)?(^|/)g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
 
 bind_key_vim() {
   local key tmux_cmd is_vim
