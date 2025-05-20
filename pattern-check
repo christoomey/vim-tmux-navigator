@@ -14,31 +14,70 @@ NORMAL=$(tput sgr0)
 # Import 'vim_pattern'
 source 'vim-tmux-navigator.tmux'
 
-match_tests=(vim Vim VIM vimdiff lvim /usr/local/bin/vim vi gvim view gview nvim vimx fzf .vim-wrapped .nvim-wrapped)
-no_match_tests=( /Users/christoomey/.vim/thing /usr/local/bin/start-vim )
+match_tests=(
+  vim
+  Vim
+  VIM
+  vimdiff
+  lvim
+  /usr/local/bin/vim
+  vi
+  gvim
+  view
+  gview
+  nvim
+  vimx
+  fzf
+  .vim-wrapped
+  .nvim-wrapped
+)
+no_match_tests=(
+  /Users/christoomey/.vim/thing
+  /usr/local/bin/start-vim
+)
+
+MATCH_RESULT="${GREEN}match${NORMAL}"
+NO_MATCH_RESULT="${RED}no match${NORMAL}"
 
 display_matches() {
+  local result
+  local final_status=0
   for process_name in "$@"; do
-    printf "%s %s\n" "$(matches_vim_pattern $process_name)" "$process_name"
+    result="$(matches_vim_pattern $process_name)"
+    if [[ "${result}" != "${expect_result}" ]]; then
+      final_status=1
+    fi
+    printf "%s %s\n" "${result}" "$process_name"
   done
+  return "${final_status}"
 }
 
 matches_vim_pattern() {
   if echo "$1" | grep -iqE "$vim_pattern"; then
-    echo "${GREEN}match${NORMAL}"
+    echo "${MATCH_RESULT}"
   else
-    echo "${RED}fail${NORMAL}"
+    echo "${NO_MATCH_RESULT}"
   fi
 }
 
 main() {
   echo "Testing against pattern: ${YELLOW}$vim_pattern${NORMAL}\n"
 
-  echo "These should all ${GREEN}match${NORMAL}\n----------------------"
-  display_matches "${match_tests[@]}"
+  local final_status=0
+  echo "These should all ${MATCH_RESULT}\n----------------------"
+  local expect_result="${MATCH_RESULT}"
+  display_matches "${match_tests[@]}" || final_status=1
 
-  echo "\nThese should all ${RED}fail${NORMAL}\n---------------------"
-  display_matches "${no_match_tests[@]}"
+  echo "\nThese should all ${NO_MATCH_RESULT}\n---------------------"
+  expect_result="${NO_MATCH_RESULT}"
+  display_matches "${no_match_tests[@]}" || final_status=1
+
+  if [[ "${final_status}" == 0 ]]; then
+    echo "${GREEN}All test cases passed!${NORMAL}"
+  else
+    echo "${RED}Some test cases are failing${NORMAL}"
+  fi
+  return "${final_status}"
 }
 
 main
