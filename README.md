@@ -93,7 +93,7 @@ Add the following to your `~/.tmux.conf` file:
 ``` tmux
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
-vim_pattern='(\\S+/)?(^|/)g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
+vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +${vim_pattern}'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
@@ -244,8 +244,8 @@ mapping.
 In interactive programs such as FZF or the built-in Vim terminal, Ctrl+hjkl can be used instead of the arrow keys to move the selection up and down. If vim-tmux-navigator is getting in your way trying to change the active window instead, you can make it be ignored and work as if this plugin were not enabled. Just modify the `is_vim` variable(that you have either on the snipped you pasted on `~/.tmux.conf` or on the `vim-tmux-navigator.tmux` file). For example, to add the program `foobar`:
 
 ```diff
-- vim_pattern='(\\S+/)?(^|/)g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
-+ vim_pattern='(\\S+/)?(^|/)g?\.?(view|l?n?vim?x?|fzf|foobar)(diff)?(-wrapped)?$'
+- vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
++ vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf|foobar)(diff)?(-wrapped)?$'
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +${vim_pattern}'"
 ```
@@ -294,7 +294,7 @@ Tmux doesn't have an option, so whatever key bindings you have need to be set
 to conditionally wrap based on position on screen:
 
 ```tmux
-vim_pattern='(\\S+/)?(^|/)g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
+vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +${vim_pattern}'"
 bind-key -n 'C-h' if-shell "$is_vim" { send-keys C-h } { if-shell -F '#{pane_at_left}'   {} { select-pane -L } }
