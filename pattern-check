@@ -33,7 +33,7 @@ match_tests=(
 )
 no_match_tests=(
   /Users/christoomey/.vim/thing
-  # /usr/local/bin/start-vim
+  /usr/local/bin/start-vim
 )
 
 MATCH_RESULT="${GREEN}match${NORMAL}"
@@ -53,7 +53,7 @@ display_matches() {
 }
 
 matches_vim_pattern() {
-  if echo "$1" | grep -iqE "$vim_pattern"; then
+  if echo "$1" | grep -iqE "^${vim_pattern}$"; then
     echo "${MATCH_RESULT}"
   else
     echo "${NO_MATCH_RESULT}"
