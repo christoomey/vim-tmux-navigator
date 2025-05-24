@@ -34,6 +34,12 @@ match_tests=(
 no_match_tests=(
   /Users/christoomey/.vim/thing
   /usr/local/bin/start-vim
+  start-vim
+  this_is_not_vim
+  thisisnotvim
+  /vim/is/not/final/path/segment
+  file_with_extension.vim
+  tvim # there's not yet a vi clone named 'tvim', so the pattern shouldn't match
 )
 
 MATCH_RESULT="${GREEN}match${NORMAL}"
