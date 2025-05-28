@@ -22,8 +22,6 @@ get_tmux_option() {
 }
 
 # Export 'vim_pattern' so that it can be tested in pattern-check
-# Note: any backslash sequence needs an extra '\' character. This is because the
-# backslashes are expanded an extra time by the 'if-shell' command.
 declare vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
 
 bind_key_vim() {

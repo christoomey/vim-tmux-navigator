@@ -53,12 +53,7 @@ display_matches() {
 }
 
 matches_vim_pattern() {
-  # Need to do an extra round of 'echo -en' in order to expand the '\'
-  # characters one extra time. This is necessary because
-  # vim-tmux-navigator.tmux uses the '$vim_pattern' variable inside of
-  # 'if-shell' which does its own round of '\' evaluation.
-  local expanded_vim_pattern="$(echo -en "${vim_pattern}")"
-  if echo "$1" | grep -iqE "${expanded_vim_pattern}"; then
+  if echo "$1" | grep -iqE "$vim_pattern"; then
     echo "${MATCH_RESULT}"
   else
     echo "${NO_MATCH_RESULT}"
