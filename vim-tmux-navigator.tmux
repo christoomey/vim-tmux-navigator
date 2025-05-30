@@ -22,14 +22,14 @@ get_tmux_option() {
 }
 
 # Export 'vim_pattern' so that it can be tested in pattern-check
-declare vim_pattern='(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'
+declare vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
 
 bind_key_vim() {
   local key tmux_cmd is_vim
   key="$1"
   tmux_cmd="$2"
   is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-      | grep -iqE '^[^TXZ ]+ +${vim_pattern}'"
+      | grep -iqE '^[^TXZ ]+ +${vim_pattern}$'"
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
   # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
