@@ -308,6 +308,26 @@ bind-key -T copy-mode-vi 'C-k' if-shell -F '#{pane_at_top}'    {} { select-pane 
 bind-key -T copy-mode-vi 'C-l' if-shell -F '#{pane_at_right}'  {} { select-pane -R }
 ```
 
+##### A note on the zoomed state
+
+When wrapping is disabled and in zoomed state, navigation between tmux panes
+using `C-h,j,k,l` is not possible using the configuration above, as
+`#{pane_at_*}` are all `1` in zoomed state (they reflect the visible window
+layout, see `window_layout` vs `window_visible_layout` in `man tmux`).
+
+One workaround is to replace the conditions `#{pane_at_*}` above with:
+```
+#{e|-:#{pane_at_*},#{window_zoomed_flag}}
+```
+
+This will essentially disable the no-wrapping behavior when zoomed, resulting
+in unwrapped navigation (but a working one).
+
+The same workaround can be enabled for vim using:
+```vim
+let  g:tmux_navigator_no_wrap_disable_when_zoomed = 1
+```
+
 #### Nesting
 If you like to nest your tmux sessions, this plugin is not going to work
 properly. It probably never will, as it would require detecting when Tmux would
