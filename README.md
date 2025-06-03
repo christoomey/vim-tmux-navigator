@@ -318,11 +318,17 @@ By default this plugin works on the outermost tmux session and the vim
 sessions it contains, but you can customize the behaviour by adding more
 commands to the expression used by the grep command.
 
-When nesting tmux sessions via ssh or mosh, you could extend it to look like
-`'(^|\/)g?(view|vim|ssh|mosh?)(diff)?$'`, which makes this plugin work within
-the innermost tmux session and the vim sessions within that one. This works
-better than the default behaviour if you use the outer Tmux sessions as relays
-to different hosts and have all instances of vim on remote hosts.
+When nesting tmux sessions via ssh or mosh, you could extend it to look like:
+
+```diff
+- vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
++ vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf|ssh|mosh)(diff)?(-wrapped)?'
+```
+
+This configuration makes this plugin work within the innermost tmux session and
+the vim sessions within that one. This works better than the default behaviour
+if you use the outer Tmux sessions as relays to different hosts and have all
+instances of vim on remote hosts.
 
 Similarly, if you like to nest tmux locally, add `|tmux` to the expression.
 
