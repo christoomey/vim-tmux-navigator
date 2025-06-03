@@ -94,8 +94,11 @@ Add the following to your `~/.tmux.conf` file:
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +${vim_pattern}$'"
+is_vim="\
+echo '#{pane_current_command}' | grep -iqE '^${vim_pattern}$' && exit 0
+echo '#{pane_current_command}' | grep -iqE '^(bash|zsh|fish)$' && exit 1
+ps -o state= -o comm= -t '#{pane_tty}' \
+  | grep -iqE '^[^TXZ ]+ +${vim_pattern}'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
 bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'

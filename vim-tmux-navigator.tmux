@@ -28,8 +28,14 @@ bind_key_vim() {
   local key tmux_cmd is_vim
   key="$1"
   tmux_cmd="$2"
-  is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-      | grep -iqE '^[^TXZ ]+ +${vim_pattern}$'"
+  # Handle common cases with #{pane_current_command} for better performance, but
+  # fall back to `ps -o ...` to handle cases where other commands invoke vim
+  # (such as when `git commit` launches vim to edit the commit message).
+  is_vim="\
+  echo '#{pane_current_command}' | grep -iqE '^${vim_pattern}$' && exit 0
+  echo '#{pane_current_command}' | grep -iqE '^(bash|zsh|fish)$' && exit 1
+  ps -o state= -o comm= -t '#{pane_tty}' \
+      | grep -iqE '^[^TXZ ]+ +${vim_pattern}'"
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
   # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
