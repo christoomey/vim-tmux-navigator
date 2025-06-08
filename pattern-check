@@ -83,6 +83,34 @@ main() {
   else
     echo -e "\n${RED}Some test cases are failing${NORMAL}"
   fi
+
+  # Find lines in README.md which redefine 'vim_pattern' so that we can make
+  # sure it matches the canonical definition in vim-tmux-navigator.tmux. This
+  # includes lines starting with '- vim_pattern', however it skips
+  # '+ vim_pattern' since those lines indicate intentional modifications and
+  # need manual review.
+  IFS='
+'
+  local -a pattern_copies=($(sed -En "s/^\s*(- )?vim_pattern='(.*)'/\2/p" README.md))
+
+  local pattern_copy
+  local readme_status=0
+  echo -e "\nChecking README.md documentation"
+  for pattern_copy in "${pattern_copies[@]}"; do
+    if [[ "${vim_pattern}" != "${pattern_copy}" ]]; then
+      echo -n "Update 'vim_pattern' in README.md "
+      echo -n "(current line: ${RED}'${pattern_copy}'${NORMAL}) "
+      echo "to match ${GREEN}'${vim_pattern}'${NORMAL}"
+      readme_status=1
+    fi
+  done
+  if [[ "${readme_status}" == 0 ]]; then
+    echo -e "\n${GREEN}README.md is up to date${NORMAL}"
+  else
+    echo -e "\n${RED}Update README.md to fix defintions of 'vim_pattern'${NORMAL}"
+    final_status="${readme_status}"
+  fi
+
   return "${final_status}"
 }
 
