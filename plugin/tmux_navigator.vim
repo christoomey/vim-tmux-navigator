@@ -71,6 +71,10 @@ if !exists("g:tmux_navigator_no_wrap")
   let g:tmux_navigator_no_wrap = 0
 endif
 
+if !exists("g:tmux_navigator_no_wrap_disable_when_zoomed")
+  let g:tmux_navigator_no_wrap_disable_when_zoomed = 0
+endif
+
 let s:pane_position_from_direction = {'h': 'left', 'j': 'bottom', 'k': 'top', 'l': 'right'}
 
 function! s:TmuxOrTmateExecutable()
@@ -145,7 +149,11 @@ function! s:TmuxAwareNavigate(direction)
       let l:args .= ' -Z'
     endif
     if g:tmux_navigator_no_wrap == 1 && a:direction != 'p'
-      let args = 'if -F "#{pane_at_' . s:pane_position_from_direction[a:direction] . '}" "" "' . args . '"'
+      let condition = '#{pane_at_' . s:pane_position_from_direction[a:direction] . '}'
+      if g:tmux_navigator_no_wrap_disable_when_zoomed
+        let condition = '#{e|-:' . condition . ',#{window_zoomed_flag}}'
+      endif
+      let args = 'if -F "' . condition . '" "" "' . args . '"'
     endif
     silent call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
