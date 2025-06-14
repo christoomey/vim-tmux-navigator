@@ -28,8 +28,14 @@ bind_key_vim() {
   local key tmux_cmd is_vim
   key="$1"
   tmux_cmd="$2"
+
+  vim_pattern="$(get_tmux_option "@vim_navigator_pattern" "${vim_pattern}")"
+
   is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-      | grep -iqE '^[^TXZ ]+ +${vim_pattern}$'"
+      | grep -iqE '^[^TXZ ]+ +"@vim_navigator_pattern"$'"
+  is_vim="$(get_tmux_option "@vim_navigator_check" "${is_vim}")"
+  is_vim="${is_vim//@vim_navigator_pattern/${vim_pattern}}"
+
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
   # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
