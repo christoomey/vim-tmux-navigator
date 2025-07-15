@@ -55,6 +55,16 @@ command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
 command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
 command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
 
+function! s:TmuxNavigate(direction)
+  let l:valid_directions = ['h', 'j', 'k', 'l', 'p']
+  if index(l:valid_directions, a:direction) == -1
+    echohl ErrorMsg | echo 'E: Invalid navigation direction; must be one of ' . join(l:valid_directions, ', ') | echohl None
+    return
+  endif
+  call s:TmuxAwareNavigate(a:direction)
+endfunction
+command! -nargs=1 TmuxNavigate call s:TmuxNavigate(<f-args>)
+
 if !exists("g:tmux_navigator_save_on_switch")
   let g:tmux_navigator_save_on_switch = 0
 endif
