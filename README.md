@@ -77,10 +77,14 @@ If you are using [lazy.nvim](https://github.com/folke/lazy.nvim). Add the follow
     { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
     { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
   },
+  config = function()
+    vim.g.tmux_navigator_no_mappings = 1
+  end,
 }
 ```
 
 Then, restart Neovim and lazy.nvim will automatically install the plugin and configure the keybindings.
+To change the keymaps you only have to replace the corresponding keymaps.
 
 ### tmux
 
