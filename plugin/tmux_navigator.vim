@@ -25,10 +25,13 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
     function! IsFZF()
       return &ft == 'fzf'
     endfunction
-    tnoremap <expr> <silent> <C-h> IsFZF() ? "\<C-h>" : "\<C-w>:\<C-U> TmuxNavigateLeft\<cr>"
-    tnoremap <expr> <silent> <C-j> IsFZF() ? "\<C-j>" : "\<C-w>:\<C-U> TmuxNavigateDown\<cr>"
-    tnoremap <expr> <silent> <C-k> IsFZF() ? "\<C-k>" : "\<C-w>:\<C-U> TmuxNavigateUp\<cr>"
-    tnoremap <expr> <silent> <C-l> IsFZF() ? "\<C-l>" : "\<C-w>:\<C-U> TmuxNavigateRight\<cr>"
+
+    let g:tmux_navigator_term_init_command = has('nvim') ? "\<C-\>\<C-N>" : "\<C-W>"
+
+    tnoremap <expr> <silent> <C-h> IsFZF() ? "\<C-h>" : g:tmux_navigator_term_init_command . ":\<C-U> TmuxNavigateLeft\<cr>"
+    tnoremap <expr> <silent> <C-j> IsFZF() ? "\<C-j>" : g:tmux_navigator_term_init_command . ":\<C-U> TmuxNavigateDown\<cr>"
+    tnoremap <expr> <silent> <C-k> IsFZF() ? "\<C-k>" : g:tmux_navigator_term_init_command . ":\<C-U> TmuxNavigateUp\<cr>"
+    tnoremap <expr> <silent> <C-l> IsFZF() ? "\<C-l>" : g:tmux_navigator_term_init_command . ":\<C-U> TmuxNavigateRight\<cr>"
   endif
 
   if !get(g:, 'tmux_navigator_disable_netrw_workaround', 0)
