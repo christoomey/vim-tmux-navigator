@@ -25,9 +25,10 @@ get_tmux_option() {
 declare vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
 
 bind_key_vim() {
-  local key tmux_cmd is_vim tmux_navigator_disable_when_zoomed
+  local key action tmux_cmd is_vim tmux_navigator_disable_when_zoomed move_cond
   key="$1"
-  tmux_cmd="$2"
+  action="$2"
+  move_cond=""
 
   vim_pattern="$(get_tmux_option "@vim_navigator_pattern" "${vim_pattern}")"
 
@@ -38,33 +39,46 @@ bind_key_vim() {
 
   tmux_navigator_disable_when_zoomed="$(get_tmux_option "@tmux_navigator_disable_when_zoomed" "0")"
   if [ "$tmux_navigator_disable_when_zoomed" = "1" ]; then
-    tmux_cmd="if-shell -F '#{window_zoomed_flag}' '' '$tmux_cmd'"
+    move_cond="#{==:#{window_zoomed_flag},0}"
   fi
+
+  # Only navigate when not zoomed and a neighbor pane exists; otherwise pass the key through.
+  case "$action" in
+    *"select-pane -L"*) move_cond="${move_cond:-1},#{==:#{pane_at_left},0}" ;;
+    *"select-pane -R"*) move_cond="${move_cond:-1},#{==:#{pane_at_right},0}" ;;
+    *"select-pane -U"*) move_cond="${move_cond:-1},#{==:#{pane_at_top},0}" ;;
+    *"select-pane -D"*) move_cond="${move_cond:-1},#{==:#{pane_at_bottom},0}" ;;
+    *)                  move_cond="${move_cond:-1},1" ;;
+  esac
+
+  # build the tmux command
+  tmux_cmd="if -F '#{&&:${move_cond}}' '$action' 'send-keys $key'"
 
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
-  # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
-  tmux bind-key -T copy-mode-vi "$key" $tmux_cmd
+  # ~tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments~
+  # quote tmux command to avoid word splitting
+  tmux bind-key -T copy-mode-vi "$key" "$tmux_cmd"
 }
 
 main() {
-  move_left="$(get_tmux_option "@vim_navigator_mapping_left" 'C-h')"
-  move_right="$(get_tmux_option "@vim_navigator_mapping_right" 'C-l')"
-  move_up="$(get_tmux_option "@vim_navigator_mapping_up" 'C-k')"
-  move_down="$(get_tmux_option "@vim_navigator_mapping_down" 'C-j')"
-  move_prev="$(get_tmux_option "@vim_navigator_mapping_prev" 'C-\')"
+  move_left="$(get_tmux_option "@vim_navigator_mapping_left" "C-h")"
+  move_right="$(get_tmux_option "@vim_navigator_mapping_right" "C-l")"
+  move_up="$(get_tmux_option "@vim_navigator_mapping_up" "C-k")"
+  move_down="$(get_tmux_option "@vim_navigator_mapping_down" "C-j")"
+  move_prev="$(get_tmux_option "@vim_navigator_mapping_prev" "C-\\")"
 
-  for k in $(echo "$move_left");  do bind_key_vim "$k" "select-pane -L"; done
-  for k in $(echo "$move_down");  do bind_key_vim "$k" "select-pane -D"; done
-  for k in $(echo "$move_up");    do bind_key_vim "$k" "select-pane -U"; done
-  for k in $(echo "$move_right"); do bind_key_vim "$k" "select-pane -R"; done
-  for k in $(echo "$move_prev");  do bind_key_vim "$k" "select-pane -l"; done
+  for k in $move_left;  do bind_key_vim "$k" "select-pane -L"; done
+  for k in $move_down;  do bind_key_vim "$k" "select-pane -D"; done
+  for k in $move_up;    do bind_key_vim "$k" "select-pane -U"; done
+  for k in $move_right; do bind_key_vim "$k" "select-pane -R"; done
+  for k in $move_prev;  do bind_key_vim "$k" "select-pane -l"; done
 
   # Restoring clear screen
-  clear_screen="$(get_tmux_option "@vim_navigator_prefix_mapping_clear_screen" 'C-l')"
-  for k in $(echo "$clear_screen"); do tmux bind "$k" send-keys 'C-l'; done
+  clear_screen="$(get_tmux_option "@vim_navigator_prefix_mapping_clear_screen" "C-l")"
+  for k in $clear_screen; do tmux bind "$k" send-keys "C-l"; done
 }
 
-if [ "$BASH_SOURCE" == "$0" ]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
   main "$@"
 fi
