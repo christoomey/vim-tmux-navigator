@@ -56,8 +56,9 @@ bind_key_vim() {
 
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
-  # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
-  tmux bind-key -T copy-mode-vi "$key" $tmux_cmd
+  # ~tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments~
+  # quote tmux command to avoid word splitting
+  tmux bind-key -T copy-mode-vi "$key" "$tmux_cmd"
 }
 
 main() {
