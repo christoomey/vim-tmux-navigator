@@ -87,7 +87,7 @@ function! s:TmuxSocket()
 endfunction
 
 function! s:TmuxCommand(args)
-  let cmd = s:TmuxOrTmateExecutable() . ' -S ' . s:TmuxSocket() . ' ' . a:args
+  let cmd = s:TmuxOrTmateExecutable() . ' -S ' . shellescape(s:TmuxSocket()) . ' ' . a:args
   let l:x=&shellcmdflag
   let &shellcmdflag='-c'
   let retval=system(cmd)
