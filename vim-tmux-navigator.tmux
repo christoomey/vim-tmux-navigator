@@ -25,14 +25,15 @@ get_tmux_option() {
 declare vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
 
 bind_key_vim() {
-  local key tmux_cmd is_vim tmux_navigator_disable_when_zoomed
+  local key tmux_cmd sid is_vim tmux_navigator_disable_when_zoomed
   key="$1"
   tmux_cmd="$2"
 
   vim_pattern="$(get_tmux_option "@vim_navigator_pattern" "${vim_pattern}")"
 
-  is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-      | grep -iqE '^[^TXZ ]+ +"@vim_navigator_pattern"$'"
+  sid="ps -o sid= -p '#{pane_pid}' | tr -d ' '"
+  is_vim="ps -o stat= -o comm= -s \"\$($sid)\" \
+      | grep -iqE '^[^TXZ ]*\+ +"@vim_navigator_pattern"$'"
   is_vim="$(get_tmux_option "@vim_navigator_check" "${is_vim}")"
   is_vim="${is_vim//@vim_navigator_pattern/${vim_pattern}}"
 
