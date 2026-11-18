@@ -84,6 +84,10 @@ Then, restart Neovim and lazy.nvim will automatically install the plugin and con
 
 ### tmux
 
+**Note for iTerm2 tmux integration users:** If you use `tmux -CC`, configure
+tmux using either method below, then follow the
+[iTerm2 integration instructions](#iterm2-tmux-integration).
+
 To configure the tmux side of this customization there are two options:
 
 #### Add a snippet
@@ -167,6 +171,53 @@ run '~/.tmux/plugins/tpm/tpm'
 
 Thanks to Christopher Sexton who provided the updated tmux configuration in
 [this blog post][].
+
+#### iTerm2 tmux integration
+
+[iTerm2's tmux integration][] (`tmux -CC`) forwards keyboard input directly to
+the application running in a pane (for example, bash) using `send-keys`. This
+bypasses tmux's key-binding processing, so the navigation bindings defined in
+`~/.tmux.conf` are not applied. Navigation from Vim to a tmux pane can still
+work, while navigation from a shell pane to Vim or another tmux pane fails.
+
+A possible workaround is to configure iTerm2 shortcuts that invoke
+`send-keys -K`. The `-K` flag sends keys through the tmux client's key table,
+allowing the navigation bindings to handle them. This requires **tmux 3.4 or
+later** on the machine running tmux.
+
+In **Settings > Profiles > tmux > Keys > Key Bindings**, add the
+following shortcuts, selecting **Send tmux command** as the action:
+
+| Shortcut | Command |
+| -------- | ------- |
+| Ctrl+h | `send-keys -K C-h` |
+| Ctrl+j | `send-keys -K C-j` |
+| Ctrl+k | `send-keys -K C-k` |
+| Ctrl+l | `send-keys -K C-l` |
+
+Make sure **Use "tmux" profile rather than profile of connecting session** under
+**Settings > General > tmux** is enabled. After changing the configuration,
+select **Shell > tmux > Detach**, then reconnect with `tmux -CC attach`.
+
+Some CLI agents, such as Codex and Claude Code, use Ctrl+j to insert a newline.
+To preserve that shortcut when using the **snippet installation above**, add
+this to `~/.tmux.conf` after defining `vim_pattern` and before the `bind-key`
+commands:
+
+``` tmux
+agent_pattern='(\S+/)?(codex|claude)'
+is_vim_or_agent="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(${vim_pattern}|${agent_pattern})$'"
+```
+
+Replace the existing Ctrl+j binding with:
+
+``` tmux
+bind-key -n 'C-j' if-shell "$is_vim_or_agent" 'send-keys C-j' 'select-pane -D'
+```
+
+Adjust `agent_pattern` if your agent uses a different process name. Reload the
+configuration with `tmux source-file ~/.tmux.conf`.
 
 Configuration
 -------------
@@ -576,3 +627,4 @@ script][] which has a more robust check.
 [configuration section below]: #custom-key-bindings
 [this blog post]: http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
 [this gist]: https://gist.github.com/mislav/5189704
+[iTerm2's tmux integration]: https://iterm2.com/documentation-tmux-integration.html
