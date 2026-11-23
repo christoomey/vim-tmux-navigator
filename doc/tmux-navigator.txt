@@ -15,6 +15,10 @@ tmux splits using a consistent set of hotkeys.
 
 NOTE: This requires tmux v1.8 or higher.
 
+Rex is supported as an alternative to tmux. When Vim runs in a Rex terminal,
+outside tmux, the navigation commands call `rex focus` once there is no Vim
+split left in that direction. See the README for the Rex key bindings.
+
 ==============================================================================
 CONFIGURATION                             *tmux-navigator-configuration*
 

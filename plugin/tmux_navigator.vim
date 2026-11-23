@@ -1,5 +1,6 @@
 " Maps <C-h/j/k/l> to switch vim splits in the given direction. If there are no more windows in that direction, forwards the operation to tmux.
 " Additionally, <C-\> toggles between last active vim splits/tmux panes.
+" Outside tmux, inside a Rex terminal, the operation is forwarded to Rex.
 
 if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
   finish
@@ -40,11 +41,49 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   endif
 endif
 
+if !exists("g:tmux_navigator_save_on_switch")
+  let g:tmux_navigator_save_on_switch = 0
+endif
+
+function! s:SaveOnSwitch()
+  if g:tmux_navigator_save_on_switch == 1
+    try
+      update " save the active buffer. See :help update
+    catch /^Vim\%((\a\+)\)\=:E32/ " catches the no file name error
+    endtry
+  elseif g:tmux_navigator_save_on_switch == 2
+    try
+      wall " save all the buffers. See :help wall
+    catch /^Vim\%((\a\+)\)\=:E141/ " catches the no file name error
+    endtry
+  endif
+endfunction
+
+let s:rex_direction = {'h': 'left', 'j': 'down', 'k': 'up', 'l': 'right'}
+
+function! s:RexAwareNavigate(direction)
+  let nr = winnr()
+  call s:VimNavigate(a:direction)
+  " Forward the switch panes command to Rex if we tried switching windows in
+  " vim but it didn't have effect.
+  if nr == winnr()
+    call s:SaveOnSwitch()
+    silent call system('rex focus ' . s:rex_direction[a:direction])
+  endif
+endfunction
+
 if empty($TMUX)
-  command! TmuxNavigateLeft call s:VimNavigate('h')
-  command! TmuxNavigateDown call s:VimNavigate('j')
-  command! TmuxNavigateUp call s:VimNavigate('k')
-  command! TmuxNavigateRight call s:VimNavigate('l')
+  if !empty($REX_BLOCK) && executable('rex')
+    command! TmuxNavigateLeft call s:RexAwareNavigate('h')
+    command! TmuxNavigateDown call s:RexAwareNavigate('j')
+    command! TmuxNavigateUp call s:RexAwareNavigate('k')
+    command! TmuxNavigateRight call s:RexAwareNavigate('l')
+  else
+    command! TmuxNavigateLeft call s:VimNavigate('h')
+    command! TmuxNavigateDown call s:VimNavigate('j')
+    command! TmuxNavigateUp call s:VimNavigate('k')
+    command! TmuxNavigateRight call s:VimNavigate('l')
+  endif
   command! TmuxNavigatePrevious call s:VimNavigate('p')
   finish
 endif
@@ -54,10 +93,6 @@ command! TmuxNavigateDown call s:TmuxAwareNavigate('j')
 command! TmuxNavigateUp call s:TmuxAwareNavigate('k')
 command! TmuxNavigateRight call s:TmuxAwareNavigate('l')
 command! TmuxNavigatePrevious call s:TmuxAwareNavigate('p')
-
-if !exists("g:tmux_navigator_save_on_switch")
-  let g:tmux_navigator_save_on_switch = 0
-endif
 
 if !exists("g:tmux_navigator_disable_when_zoomed")
   let g:tmux_navigator_disable_when_zoomed = 0
@@ -129,17 +164,7 @@ function! s:TmuxAwareNavigate(direction)
   " a) we're toggling between the last tmux pane;
   " b) we tried switching windows in vim but it didn't have effect.
   if s:ShouldForwardNavigationBackToTmux(tmux_last_pane, at_tab_page_edge)
-    if g:tmux_navigator_save_on_switch == 1
-      try
-        update " save the active buffer. See :help update
-      catch /^Vim\%((\a\+)\)\=:E32/ " catches the no file name error
-      endtry
-    elseif g:tmux_navigator_save_on_switch == 2
-      try
-        wall " save all the buffers. See :help wall
-      catch /^Vim\%((\a\+)\)\=:E141/ " catches the no file name error
-      endtry
-    endif
+    call s:SaveOnSwitch()
     let args = 'select-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
     if g:tmux_navigator_preserve_zoom == 1
       let l:args .= ' -Z'

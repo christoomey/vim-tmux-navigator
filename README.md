@@ -8,7 +8,7 @@ configuration described in [this gist][]. When combined with a set of tmux
 key bindings, the plugin will allow you to navigate seamlessly between
 vim and tmux splits using a consistent set of hotkeys.
 
-**NOTE**: This requires tmux v1.8 or higher.
+**NOTE**: This requires tmux v1.8 or higher. [Rex](#rex) is also supported.
 
 Usage
 -----
@@ -167,6 +167,57 @@ run '~/.tmux/plugins/tpm/tpm'
 
 Thanks to Christopher Sexton who provided the updated tmux configuration in
 [this blog post][].
+
+### Rex
+
+[Rex][] is supported as an alternative to tmux. When Vim runs in a Rex
+terminal, outside tmux, the `TmuxNavigate{Left,Down,Up,Right}` commands move
+focus to the neighboring Rex pane once there is no Vim split left in that
+direction. The Vim side needs no configuration; it detects Rex by the
+`$REX_BLOCK` environment variable and calls `rex focus`.
+
+For Rex to hand the keys to Vim, add the following to
+`~/.config/rex/init.lua`:
+
+``` lua
+-- Smart pane switching with awareness of Vim splits.
+-- See: https://github.com/christoomey/vim-tmux-navigator
+local nav_keys = { left = "h", down = "j", up = "k", right = "l" }
+
+rex.action {
+  name  = "vim_navigate",
+  title = "Navigate Panes and Vim Splits",
+  args  = { direction = "string" },
+  run   = function(ctx, args)
+    local key = nav_keys[args.direction]
+    if key == nil then error("unknown direction: " .. tostring(args.direction), 0) end
+    local p = rex.block.call("com.superlogical.terminal", "process", { block_id = ctx.block_id })
+    local fg = p and p.foreground
+    local name = fg and (fg.argv0 or fg.name) or ""
+    local _, err
+    if name:match("vim$") then
+      -- Send ctrl+h/j/k/l to Vim as the control character a terminal sends.
+      _, err = rex.block.call("com.superlogical.terminal", "write",
+        { block_id = ctx.block_id, data = string.char(key:byte() - 96) })
+    else
+      _, err = rex.session.focus_direction { direction = args.direction }
+    end
+    if err ~= nil then error(err, 0) end
+  end,
+}
+
+for direction, key in pairs(nav_keys) do
+  rex.bind("ctrl+" .. key, "vim_navigate", { direction = direction })
+end
+```
+
+Then run `rex config reload`.
+
+`g:tmux_navigator_save_on_switch` applies in Rex too. `TmuxNavigatePrevious`
+and the zoom and wrap options are tmux only; in Rex, focus stops at the edge
+of the layout.
+
+[Rex]: https://www.superlogical.com/rex
 
 Configuration
 -------------
