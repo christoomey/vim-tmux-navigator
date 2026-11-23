@@ -213,9 +213,8 @@ end
 
 Then run `rex config reload`.
 
-`g:tmux_navigator_save_on_switch` applies in Rex too. `TmuxNavigatePrevious`
-and the zoom and wrap options are tmux only; in Rex, focus stops at the edge
-of the layout.
+`TmuxNavigatePrevious` and the autosave, zoom and wrap options are tmux only;
+in Rex, focus stops at the edge of the layout.
 
 [Rex]: https://www.superlogical.com/rex
 
