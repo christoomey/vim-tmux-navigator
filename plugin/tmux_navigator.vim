@@ -1,5 +1,6 @@
 " Maps <C-h/j/k/l> to switch vim splits in the given direction. If there are no more windows in that direction, forwards the operation to tmux.
 " Additionally, <C-\> toggles between last active vim splits/tmux panes.
+" Outside tmux, inside a Rex terminal, the operation is forwarded to Rex.
 
 if exists("g:loaded_tmux_navigator") || &cp || v:version < 700
   finish
@@ -40,11 +41,30 @@ if !get(g:, 'tmux_navigator_no_mappings', 0)
   endif
 endif
 
+let s:rex_direction = {'h': 'left', 'j': 'down', 'k': 'up', 'l': 'right'}
+
+function! s:RexAwareNavigate(direction)
+  let nr = winnr()
+  call s:VimNavigate(a:direction)
+  " Forward the switch panes command to Rex if we tried switching windows in
+  " vim but it didn't have effect.
+  if nr == winnr()
+    silent call system('rex focus ' . s:rex_direction[a:direction])
+  endif
+endfunction
+
 if empty($TMUX)
-  command! TmuxNavigateLeft call s:VimNavigate('h')
-  command! TmuxNavigateDown call s:VimNavigate('j')
-  command! TmuxNavigateUp call s:VimNavigate('k')
-  command! TmuxNavigateRight call s:VimNavigate('l')
+  if !empty($REX_BLOCK) && executable('rex')
+    command! TmuxNavigateLeft call s:RexAwareNavigate('h')
+    command! TmuxNavigateDown call s:RexAwareNavigate('j')
+    command! TmuxNavigateUp call s:RexAwareNavigate('k')
+    command! TmuxNavigateRight call s:RexAwareNavigate('l')
+  else
+    command! TmuxNavigateLeft call s:VimNavigate('h')
+    command! TmuxNavigateDown call s:VimNavigate('j')
+    command! TmuxNavigateUp call s:VimNavigate('k')
+    command! TmuxNavigateRight call s:VimNavigate('l')
+  endif
   command! TmuxNavigatePrevious call s:VimNavigate('p')
   finish
 endif
